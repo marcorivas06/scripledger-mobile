@@ -6,8 +6,6 @@ import { StyleSheet } from "react-native";
 import { RootNavigator } from './src/pages/root';
 import { config } from "./config/gluestack-ui.config"
 // import { config } from "@gluestack-ui/config"; // Optional if you want to use default theme
-// import { LocalRealmContext } from "@mongodb/context";
-// import { LoggerVersion } from "@components/atoms/LoggerVersion";
 
 export default function App() {
   return (
