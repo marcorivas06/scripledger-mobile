@@ -1,16 +1,15 @@
 import { tabBarIcon } from '@components/atoms/TabIcon';
 import { BottomStack, STACKS } from '@src/types/routes';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeStack from '@pages/Tabs/screens/Home';
-import ExchangeStack from '@pages/Tabs/screens/Exchange';
-import PayTransferStack from '@pages/Tabs/screens/PayTransfer';
-import ReceiveStack from '@pages/Tabs/screens/Receive';
+import {StartTab} from '@pages/Tabs/screens/Start';
+import {ExchangeTab} from '@pages/Tabs/screens/Exchange';
+import {HistoryTab} from '@pages/Tabs/screens/History';
+import { StyleSheet } from "react-native";
 
 const PageIcons = {
-  home: tabBarIcon('home', 'AntDesign'),
-  payTransfer: tabBarIcon('attach-money', 'MaterialIcons'),
-  received: tabBarIcon('download', 'AntDesign'),
-  exchange: tabBarIcon('currency-exchange', 'MaterialIcons'),
+  start: tabBarIcon('home', 'Octicons'),
+  Exchange: tabBarIcon('line-chart', 'FontAwesome'),
+  history: tabBarIcon('history', 'FontAwesome'),
 };
 
 const Tab = createBottomTabNavigator<BottomStack>();
@@ -19,31 +18,29 @@ export function Tabs() {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown: false,
-          tabBarShowLabel: false,
-          tabBarActiveTintColor: '$primary',
-          tabBarStyle: { height: 80 },
+          //tabBarShowLabel: false,
+          tabBarStyle: styles.tabBarStyle,
         })}
       >
         <Tab.Screen
-          name={STACKS.HOME}
-          component={HomeStack}
-          options={{ tabBarIcon: PageIcons.home }}
-        />
-        <Tab.Screen
-          name={STACKS.PAYTRANSFER}
-          component={PayTransferStack }
-          options={{ tabBarIcon: PageIcons.payTransfer }}
-        />
-        <Tab.Screen
-          name={STACKS.RECEIVE}
-          component={ReceiveStack}
-          options={{ tabBarIcon: PageIcons.received }}
+          name={STACKS.START}
+          component={StartTab}
+          options={{ tabBarIcon: PageIcons.start }}
         />
         <Tab.Screen
           name={STACKS.EXCHANGE}
-          component={ExchangeStack}
-          options={{ tabBarIcon: PageIcons.exchange }}
+          component={ExchangeTab }
+          options={{ tabBarIcon: PageIcons.Exchange }}
+        />
+        <Tab.Screen
+          name={STACKS.HISTORY}
+          component={HistoryTab}
+          options={{ tabBarIcon: PageIcons.history }}
         />
       </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBarStyle: { height: 80, backgroundColor:'rgba(238, 232, 244, 1)' },
+});

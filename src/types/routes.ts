@@ -3,19 +3,18 @@ import { CompositeNavigationProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export enum STACKS {
-  HOME = 'HomeStack',
-  PAYTRANSFER = 'PayTransferStack',
-  RECEIVE = 'ReceiveStack',
-  EXCHANGE = 'ExchangeStack',
-  MAIN = 'MainStack',
+  START = 'Start',
+  EXCHANGE = 'Exchange',
+  HISTORY = 'History',  
+  MAIN = 'Main',
 }
 export enum SCREENS {}
 
 export type BottomStack = {
-  [STACKS.HOME]: undefined;
-  [STACKS.PAYTRANSFER]: undefined;
-  [STACKS.RECEIVE]: undefined;
+  [STACKS.START]: undefined;
   [STACKS.EXCHANGE]: undefined;
+  [STACKS.HISTORY]: undefined;
+  [STACKS.MAIN]: undefined;
 };
 
 export type RootStack = {

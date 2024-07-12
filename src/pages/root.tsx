@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { BottomStack, STACKS, RootStack } from '../types/routes';
+import { STACKS, RootStack } from '../types/routes';
 import { Tabs } from './Tabs/tab';
 
 const Stack = createNativeStackNavigator<RootStack>();

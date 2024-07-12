@@ -1,43 +1,12 @@
-import { Box, Heading, HStack, ScrollView, View } from '@gluestack-ui/themed';
+import { Box, Heading, HStack, ScrollView, View, VStack } from '@gluestack-ui/themed';
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export function PagePadding({ children, paddingOffset = 0 }) {
-  return (
-    <View style={{ paddingHorizontal: 24 + paddingOffset, width: '100%' }}>
-      {children}
-    </View>
-  );
-}
-
-export function PageHeader({
-  title,
-  rightHeaderComponent,
-  includePagePadding = false,
-}) {
-  const header = useMemo(
-    () => (
-      <HStack style={styles.pageTitle}>
-        <Heading size="2xl" textTransform="capitalize">
-          {title}
-        </Heading>
-        {rightHeaderComponent && rightHeaderComponent}
-      </HStack>
-    ),
-    [title, rightHeaderComponent],
-  );
-
-  if (includePagePadding) {
-    return <PagePadding>{header}</PagePadding>;
-  }
-
-  return header;
-}
 export function Page({
   children,
-  headerShown = true,
+  headerShown,
   fullWidth = false,
   containerStyle = {},
   ...props
@@ -51,12 +20,65 @@ export function Page({
         containerStyle,
       ]}
     >
-      <View style={styles.circle}/>
-      <Box h="100%" px={fullWidth ? 0 : 5} {...props}>
-        {children}
-      </Box>
+        <Box h="100%" {...props}>
+          {children}
+        </Box> 
     </View>
   );
+}
+export function Section({
+  children,
+  isHigherOpacity,
+  ...props
+}) {
+  return (
+    <View
+      backgroundColor={isHigherOpacity ? '$background_higher_opacity' : ''  }
+    >
+        <Box style={{ paddingHorizontal: 16, width: '100%' }}>
+          {children}
+        </Box> 
+    </View>
+  );
+}
+
+export function MyHeader({
+  title,
+  userName,
+  isHomePage,
+  rightHeaderComponent,
+  isSubsectionHeader,
+}) {
+  const header = useMemo(
+    () => (
+      <HStack style={styles.pageTitle}>
+        {isHomePage ? (
+          <VStack>
+            <Heading color='$global_font_color' size="2xl" textTransform="capitalize">
+              {title}
+            </Heading>
+            <Heading color='$header_font_color' size="2xl" textTransform="capitalize">
+              {userName} 👋
+            </Heading>
+          </VStack>
+        ) : (
+          isSubsectionHeader ? (
+            <Heading color='$global_font_color' size="md">
+              {title}
+            </Heading>
+          ) : (
+            <Heading color='$global_font_color' size="2xl" textTransform="capitalize">
+              {title}
+            </Heading>
+          )
+        )}
+        {rightHeaderComponent && rightHeaderComponent()}
+      </HStack>
+    ),
+    [title, userName, isHomePage, isSubsectionHeader, rightHeaderComponent]
+  );
+
+  return header;
 }
 
 export function ScrollablePage({
@@ -104,29 +126,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 8,
     paddingVertical: 8,
+    paddingHorizontal: 16,
+    marginBottom:20,
   },
   container: {
     flex: 1,
     height: '100%',
-    backgroundColor:'#FFF',
-    padding:10
+    backgroundColor:'rgba(103, 80, 164, 0.05)',
   },
-  circle: {
-    width: 450, // Diameter of the circle
-    height: 400, // Diameter of the circle
-    borderRadius: 200, // Half the width/height to make it a perfect circle
-    backgroundColor: '#e7f5ff',
+  overlay: {
+    // Purple color with 11% opacity
+    backgroundColor: 'rgba(103, 80, 164, 0.11)',
+    // Make sure this overlay covers the container area
     position: 'absolute',
-    top: -250, // Adjust this value to position the circle's top edge
-    alignSelf: 'center', // Centers the circle horizontally
-    zIndex: -1, // Ensures it's behind your other content but above the background
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
   },
 });
 
 Page.propTypes = {
   title: PropTypes.string,
+  userName: PropTypes.string,
   children: PropTypes.node,
   headerShown: PropTypes.bool,
+  isHomePage: PropTypes.bool,
   scrollable: PropTypes.bool,
   rightHeaderComponent: PropTypes.node,
 };

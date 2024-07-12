@@ -60,7 +60,7 @@ type TabIconProps = {
 };
 
 export const TabIcon = ({
-  color = 'grey.600',
+  color = '$coolGray800',
   size = 'xl',
   name,
   as,

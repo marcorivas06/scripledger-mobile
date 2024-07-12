@@ -1,15 +1,13 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Receive } from './Receive';
+import { History } from './History';
 import { SCREENS } from '@constants';
-import { CustomHeader } from '@components/atoms/CustomHeader';
 
 const Stack = createNativeStackNavigator();
 
-export default function ReceiveStack() {
+export function HistoryTab() {
   const defaultScreenOptions = {
-    headerShown: true,
+    headerShown: false,
     headerTitle: '',
-    headerTintColor: '#0F0',
     headerShadowVisible: false,
   };
 
@@ -17,13 +15,12 @@ export default function ReceiveStack() {
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
         headerShown: true,
-        header: () => <CustomHeader />, // Use CustomHeader as the header for all screens
         headerShadowVisible: false,
       })}
     >
       <Stack.Screen
-      name={SCREENS.RECEIVE_STACK.RECEIVE}
-      component={Receive}
+      name={SCREENS.HISTORY_STACK.HISTORY}
+      component={History}
       options={{...defaultScreenOptions}}
       />
     </Stack.Navigator>

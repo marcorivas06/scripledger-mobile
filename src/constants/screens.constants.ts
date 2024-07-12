@@ -1,22 +1,17 @@
 export const SCREENS = {
   STACKS: {
-    HOME: 'Home',
-    PAYTRANSFER: 'PayTransfer',
-    RECEIVE: 'Receive',
-    EXCHANGE: 'Account',
+    START: 'Start',
+    EXCHANGE: 'Exchange',
+    HISTORY: 'History',
     MAIN: 'Main',
   },
-  HOME_STACK: {
-    HOME: 'Home',
-    GIFT_CARD_DETAILS: 'GiftCardDetails',
-  },
-  PAYTRANSFER_STACK: {
-    PAYTRANSFER: 'PayTransfer',
-  },
-  RECEIVE_STACK: {
-    RECEIVE: 'Receive',
+  START_STACK: {
+    START: 'StartStack',
   },
   EXCHANGE_STACK: {
-    EXCHANGE: 'Exchange',
+    EXCHANGE: 'ExchangeStack',
   },
+  HISTORY_STACK: {
+    HISTORY: 'HistoryStack',
+  }, 
 };
