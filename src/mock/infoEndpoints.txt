@@ -1,0 +1,7 @@
+
+ENDPOINT 
+
+{
+GET /accounts/{account_id}
+accountResponse.json 
+}
