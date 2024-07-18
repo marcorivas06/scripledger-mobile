@@ -2,27 +2,35 @@ import { StyleSheet, View, Text } from 'react-native';
 import { SvgComponent } from "@assets/BrandsSvgs/BrandsSvgs";
 import { Box, VStack, HStack } from "@gluestack-ui/themed";
 import { TouchableOpacity, ScrollView } from "react-native-gesture-handler";
+import AppLoading from 'expo-app-loading';
+import { useEffect } from 'react';
+import { useFonts } from 'expo-font';
 
-export const GiftCard = ({ balance, token_id, token_name }) => (
+
+
+export const GiftCard = ({ balance, token_id, token_name }) => {
+  
+  return (
   <TouchableOpacity>
     <Box style={styles.cardContainer}>
         <VStack>
           <HStack style={styles.header}>
             <SvgComponent id={token_id} style={styles.svgIcon} />
-            <Text style={styles.tokenName}>{token_name}</Text>
+            <Text style={[styles.tokenName, {fontFamily:'DarkerGrotesque-Bold'}] }>{token_name}</Text>
           </HStack>
-          <Text style={styles.balance}>
+          <Text style={[styles.balance, {fontFamily:'DarkerGrotesque-SemiBold'}]}>
             $ {balance}
           </Text>
         </VStack>
       </Box>
   </TouchableOpacity>
 );
+}
 
 const styles = StyleSheet.create({
   cardContainer: {
     height: 120,
-    width: 140,  // Adjust width as needed
+    width: 150,  // Adjust width as needed
     backgroundColor: '#FFF',
     borderRadius: 10,
     margin: 10,
@@ -39,20 +47,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   svgIcon: {
-    marginRight: 10,  // Adjust space between icon and text
+    marginRight: 10,
   },
   tokenName: {
-    fontSize: 15,
-    fontWeight: '600',  // SemiBold equivalent
-    fontFamily: 'DarkerGrotesque-SemiBold',  // Make sure font is correctly linked
+    fontSize: 18,
+    fontWeight: '600',
+    fontFamily: 'DarkerGrotesque-Black',
     color: '#51382F',
+    padding:5,
   },
   balance: {
-    fontSize: 18,
+    fontSize: 21,
     fontWeight: 'bold',
-    fontFamily: 'DarkerGrotesque-Bold',  // Make sure font is correctly linked
+    fontFamily: 'DarkerGrotesque-Light',
     color: '#51382F',
     marginTop: 5,
-    padding: 15,
+    padding: 5,
   }
 });

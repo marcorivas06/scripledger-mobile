@@ -1,0 +1,70 @@
+{
+  "transactions": [
+    {
+      "token_id": "0",
+      "senderPublicKey": "key123",
+      "senderAccountId": "account123",
+      "username": "john_doe",
+      "recipientPublicKey": "key456",
+      "accountId": "account456",
+      "type": "Add",
+      "balance": 100.50,
+      "note": "Payment for services",
+      "transactionLabel": "Service Payment",
+      "date": "3 Dec 2022"
+    },
+    {
+      "token_id": "3",
+      "senderPublicKey": "key124",
+      "senderAccountId": "account124",
+      "username": "jane_smith",
+      "recipientPublicKey": "key457",
+      "accountId": "account457",
+      "type": "Pay",
+      "balance": 250.75,
+      "note": "Deposit to savings",
+      "transactionLabel": "Savings Deposit",
+      "date": "3 Dec 2022"
+    },
+    {
+      "token_id": "0",
+      "senderPublicKey": "key125",
+      "senderAccountId": "account125",
+      "username": "alice_jones",
+      "recipientPublicKey": "key458",
+      "accountId": "account458",
+      "type": "Send",
+      "balance": 50.00,
+      "note": "ATM withdrawal",
+      "transactionLabel": "ATM Withdrawal",
+      "date": "3 Dec 2022"
+  
+    },
+    {
+      "token_id": "1",
+      "senderPublicKey": "key126",
+      "senderAccountId": "account126",
+      "username": "bob_williams",
+      "recipientPublicKey": "key459",
+      "accountId": "account459",
+      "type": "Receive",
+      "balance": 300.00,
+      "note": "Rent payment",
+      "transactionLabel": "Rent Payment",
+      "date": "3 Dec 2022"
+    },
+    {
+      "token_id": "2",
+      "senderPublicKey": "key127",
+      "senderAccountId": "account127",
+      "username": "carol_davis",
+      "recipientPublicKey": "key460",
+      "accountId": "account460",
+      "type": "Receive",
+      "balance": 75.25,
+      "note": "Utility bill",
+      "transactionLabel": "Utility Bill Payment",
+      "date": "3 Dec 2022"
+    }
+  ]
+}

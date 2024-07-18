@@ -5,6 +5,7 @@ import {
   EvilIcons,
   FontAwesome,
   FontAwesome5,
+  FontAwesome6,
   Fontisto,
   Foundation,
   Ionicons,
@@ -22,6 +23,7 @@ const IconLibaries = {
   EvilIcons,
   FontAwesome,
   FontAwesome5,
+  FontAwesome6,
   Fontisto,
   Foundation,
   Feather,
@@ -41,6 +43,7 @@ type Icons = {
   EvilIcons: typeof EvilIcons;
   FontAwesome: typeof FontAwesome;
   FontAwesome5: typeof FontAwesome5;
+  FontAwesome6: typeof FontAwesome6;
   Fontisto: typeof Fontisto;
   Foundation: typeof Foundation;
   Feather: typeof Feather;

@@ -35,7 +35,7 @@ export function Section({
     <View
       backgroundColor={isHigherOpacity ? '$background_higher_opacity' : ''  }
     >
-        <Box style={{ paddingHorizontal: 16, width: '100%' }}>
+        <Box style={{ paddingHorizontal: 16, width: '100%', alignItems:'center' }}>
           {children}
         </Box> 
     </View>
@@ -72,7 +72,7 @@ export function MyHeader({
             </Heading>
           )
         )}
-        {rightHeaderComponent && rightHeaderComponent()}
+        {rightHeaderComponent && rightHeaderComponent}
       </HStack>
     ),
     [title, userName, isHomePage, isSubsectionHeader, rightHeaderComponent]

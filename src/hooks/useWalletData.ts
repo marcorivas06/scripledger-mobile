@@ -1,5 +1,4 @@
 import useSWR from 'swr'
-import { Account, Balance } from '@types/types'
 
 // const metaData = {
 //   account_id: '7459204508234895',
@@ -36,7 +35,7 @@ import { Account, Balance } from '@types/types'
 
 
 // Setting up the promise
-// export async function useWalletData(filePath:string): Promise<Account>{
+// export async function useWalletData(filePath:string): Promise<IAccount>{
 //   try {
 //     const response = await fetch(filePath);
 //     if(!response.ok){
