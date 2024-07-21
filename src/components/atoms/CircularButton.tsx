@@ -4,10 +4,20 @@ import { TabIcon } from "@components/atoms/TabIcon";
 import LinearGradient from 'react-native-linear-gradient';
 import { StyleSheet } from 'react-native';
 
-export const CircularButton = ({name, as})  => {
+// export const CircularButton = ({name, as})  => {
+//   return (
+//     <TouchableOpacity>
+//       <View bg="$inputbackground" padding={15} borderRadius="$full">
+//         <TabIcon name={name} as={as} />
+//       </View>
+//     </TouchableOpacity>
+//   );
+// }
+
+export const CircularButton = ({name, as, radius})  => {
   return (
     <TouchableOpacity>
-      <View bg="$inputbackground" padding={15} borderRadius="$full">
+      <View bg="$inputbackground" padding={15} borderRadius={radius}>
         <TabIcon name={name} as={as} />
       </View>
     </TouchableOpacity>

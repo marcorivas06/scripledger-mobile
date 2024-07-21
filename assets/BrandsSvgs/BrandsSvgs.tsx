@@ -21,13 +21,10 @@ const BRAND_ICONS = {
 };
 
 export function GetBrandsTitleForId(id):string{  
-  console.log("ID: " + id);
   const icon = BRAND_ICONS[id];
   if (icon) {
-    console.log(icon.title)
     return icon.title;       // Return the title
   }
-  console.log('No icon found for given ID'); // Log a message if no icon is found
   return ''; // Return an empty string if no icon is found
 }
 

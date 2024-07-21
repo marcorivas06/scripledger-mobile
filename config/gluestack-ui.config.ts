@@ -29,7 +29,7 @@ export const gluestackUIConfig = createConfig({
     colors: {
       global_font_color: '#1C1B1F',
       header_font_color: '#0000FF',
-      primary: "#0074FF", 
+      primary: "#000", 
       secondary: "#4D9EFF",
       info: "#C4ECF9", 
       inputbackground: "rgba(242, 257, 257, 0.8)",

@@ -7,7 +7,7 @@
       "username": "john_doe",
       "recipientPublicKey": "key456",
       "accountId": "account456",
-      "type": "Add",
+      "type": "Pay",
       "balance": 100.50,
       "note": "Payment for services",
       "transactionLabel": "Service Payment",
