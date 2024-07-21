@@ -5,8 +5,7 @@ import { GetBrandsTitleForId, SvgComponent } from "@assets/BrandsSvgs/BrandsSvgs
 
 export const TransactionHistory = ({transactions}) => {
   const types = {
-    Pay: { color: 'red', sign: '-' },
-    Send: { color: 'blue', sign: '-' },
+    Sent: { color: 'red', sign: '-' },
     Receive: { color: 'green', sign: '+' }
   };
 

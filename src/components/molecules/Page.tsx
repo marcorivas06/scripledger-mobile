@@ -14,7 +14,7 @@ export function Page({
   const insets = useSafeAreaInsets();
   return (
     <View
-      style={[
+    style={[
         styles.container,
         { paddingTop: headerShown ? 0 : insets.top },
         containerStyle,

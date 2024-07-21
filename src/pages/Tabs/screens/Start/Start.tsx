@@ -2,9 +2,7 @@
 import jsonForAccountData from "@src/mock/accountResponse.json";
 import jsonForTransactions from "@src/mock/accountResponseTransactions.json";
 //------
-import {
-  CircularButton,
-} from "@components/atoms/CircularButton";
+import { CircularButton } from "@components/atoms/CircularButton";
 import { Page, MyHeader, Section } from "@components/molecules/Page";
 import { Text } from "@gluestack-ui/themed";
 import { useEffect, useState } from "react";
@@ -12,7 +10,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { IBalance, IStartActionButton, ITransaction } from "@types/types";
 import { StartActionButtons } from "@components/molecules/StartActionButtons";
 import { GiftCardTile } from "@components/molecules/GiftCardTile";
-import { TransactionHistory }  from '@components/molecules/TransactionHistory';
+import { TransactionHistory } from "@components/molecules/TransactionHistory";
 
 //[PH]
 // Would come from a request
@@ -56,13 +54,15 @@ export function Start({ navigation }) {
   }, []);
 
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <Page fullWidth>
+    <Page fullWidth>
+      <ScrollView style={{ flex: 1 }}>
         <MyHeader
           title="Welcome"
           userName="Marcos"
           isHomePage={true}
-          rightHeaderComponent={<CircularButton name="settings" as="Feather" radius="$full" />}
+          rightHeaderComponent={
+            <CircularButton name="settings" as="Feather" radius="$full" />
+          }
         />
         <Section isHigherOpacity={true}>
           <MyHeader
@@ -70,16 +70,13 @@ export function Start({ navigation }) {
             rightHeaderComponent={<Text>See all</Text>}
             isSubsectionHeader={true}
           />
-          <GiftCardTile
-          balances={balances}
-          />
+          <GiftCardTile balances={balances} />
         </Section>
         <Section isHigherOpacity={false}>
           <StartActionButtons actionArray={actions} />
-          <TransactionHistory transactions={transactions}/>
+          <TransactionHistory transactions={transactions} />
         </Section>
-      </Page>
-    </ScrollView>
+      </ScrollView>
+    </Page>
   );
 }
-
