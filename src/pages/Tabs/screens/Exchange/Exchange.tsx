@@ -1,51 +1,90 @@
-import React, { useState } from 'react';
-import { PagePadding, ScrollablePage, PageHeader, Page } from "@components/molecules/Page";
-import { Center, Box, VStack, Text, Heading } from "@gluestack-ui/themed";
-import { View, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons'; // or import from 'react-native-vector-icons/MaterialCommunityIcons' for non-Expo
-import { Picker } from '@react-native-picker/picker';
-import { ImagePicker } from '@components/molecules/ImagePicker';
-import { MarketRates } from '@components/molecules/MarketRates';
+import React from "react";
+import { CircularButton } from "@components/atoms/CircularButton";
+import { TabIcon } from "@components/atoms/TabIcon";
+import { Page, MyHeader, Section } from "@components/molecules/Page";
+import {
+  Text,
+  VStack,
+  HStack,
+  Button,
+  View,
+  Box,
+  Input,
+  InputField,
+  ButtonText,
+  ButtonIcon,
+} from "@gluestack-ui/themed";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { InputAmount } from "@components/molecules/InputAmount";
+import { ExchangeBrandsInfoBox } from "@components/atoms/ExchangeBrandsInfoBox";
 
-const t = {
-  exchangeHeader: 'Exchange',
-  exchangeSubHeader: "Let's Exchange. Swap Giftcards",
-};
+const emojisWithIcons = [
+  { title: "happy", icon: "emoticon-happy-outline" },
+  { title: "cool", icon: "emoticon-cool-outline" },
+  { title: "lol", icon: "emoticon-lol-outline" },
+  { title: "sad", icon: "emoticon-sad-outline" },
+  { title: "cry", icon: "emoticon-cry-outline" },
+  { title: "angry", icon: "emoticon-angry-outline" },
+  { title: "confused", icon: "emoticon-confused-outline" },
+  { title: "excited", icon: "emoticon-excited-outline" },
+  { title: "kiss", icon: "emoticon-kiss-outline" },
+  { title: "devil", icon: "emoticon-devil-outline" },
+  { title: "dead", icon: "emoticon-dead-outline" },
+  { title: "wink", icon: "emoticon-wink-outline" },
+  { title: "sick", icon: "emoticon-sick-outline" },
+  { title: "frown", icon: "emoticon-frown-outline" },
+];
+
+const mockData = [
+  { icon: "apple", name: "Apple", dollar: 1.2, percentRate: -1.3 },
+  { icon: "microsoft", name: "Microsoft", dollar: 0.9, percentRate: -3.7 },
+  { icon: "google", name: "Google", dollar: 0.8, percentRate: 2.5 },
+];
 
 export function Exchange() {
-  const [selectedCardLeft, setSelectedCardLeft] = useState('starbucks');
-  const [selectedCardRight, setSelectedCardRight] = useState('apple');
-
   return (
     <Page fullWidth>
-      <PagePadding>
-        <PageHeader title={t.exchangeHeader} />
-        <Center>
-          <Text>{t.exchangeSubHeader}</Text>
-          <View style={styles.hStack}>
-          <ImagePicker/>
-            <MaterialCommunityIcons name="swap-horizontal" size={24} color="black" />
-            <ImagePicker/>        
-          </View>
-        </Center>
-        <View style={{marginTop:30}}>
-          <MarketRates/>
-        </View>
-      </PagePadding>
+      <ScrollView style={{ flex: 1 }}>
+        <MyHeader
+          title="Exchange"
+          isHomePage={false}
+          rightHeaderComponent={
+            <CircularButton name="settings" as="Feather" radius="$full" />
+          }
+        />
+        <Section isHigherOpacity={true}>
+          <VStack alignItems="center">
+            <InputAmount typeOfInput="Sell" data={emojisWithIcons} />
+            <TabIcon size="sm" as="Ionicons" name="arrow-down" />
+            <InputAmount typeOfInput="Buy" data={emojisWithIcons} />
+          </VStack>
+        </Section>
+        <Section isHigherOpacity={false}>
+          <Button
+            width={358}
+            margin={17}
+            borderRadius="$full"
+            size="lg"
+            variant="solid"
+            bgColor="black"
+            action="primary"
+          >
+            <ButtonText>Swap</ButtonText>
+            <ButtonIcon>
+              <TabIcon as="AntDesign" name="swap" color="white" />
+            </ButtonIcon>
+          </Button>
+          {mockData.map((e, index) => (
+            <ExchangeBrandsInfoBox
+              key={`${e.name}-${index}`}
+              icon={e.icon}
+              name={e.name}
+              dollar={e.dollar}
+              percentRate={e.percentRate}
+            />
+          ))}
+        </Section>
+      </ScrollView>
     </Page>
   );
 }
-
-const styles = StyleSheet.create({
-  hStack: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 20,
-  },
-  picker: {
-    width: 150,
-    height: 44,
-  },
-});
-

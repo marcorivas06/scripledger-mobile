@@ -1,18 +1,16 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Exchange } from './Exchange';
+import { History } from './History';
 import { SCREENS } from '@constants';
 
 const Stack = createNativeStackNavigator();
 
-export function ExchangeTab() {
-
+export function HistoryTab() {
   const defaultScreenOptions = {
     headerShown: false,
     headerTitle: '',
-    headerTintColor: '#0F0',
     headerShadowVisible: false,
   };
-  
+
   return (
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
@@ -20,9 +18,9 @@ export function ExchangeTab() {
         headerShadowVisible: false,
       })}
     >
-      <Stack.Screen 
-      name={SCREENS.EXCHANGE_STACK.EXCHANGE} 
-      component={Exchange}
+      <Stack.Screen
+      name={SCREENS.HISTORY_STACK.HISTORY}
+      component={History}
       options={{...defaultScreenOptions}}
       />
     </Stack.Navigator>

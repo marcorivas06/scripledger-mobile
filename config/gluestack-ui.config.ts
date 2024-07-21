@@ -27,11 +27,14 @@ export const gluestackUIConfig = createConfig({
   } as const,
   tokens: {
     colors: {
-      primary: "#0074FF", 
+      global_font_color: '#1C1B1F',
+      header_font_color: '#0000FF',
+      primary: "#000", 
       secondary: "#4D9EFF",
       info: "#C4ECF9", 
-      inputbackground: "#E7F0FE",
-      background: "#FFFFFF",
+      inputbackground: "rgba(242, 257, 257, 0.8)",
+      background: "rgba(103, 80, 164, 0.05)",
+      background_higher_opacity:'rgba(103, 80, 164, 0.11)',
       text: "#323F4B", 
       success: "#0F9D58", 
       warning: "#F4B400", 
@@ -430,6 +433,7 @@ export const gluestackUIConfig = createConfig({
       backgroundDarkMuted: '#252526',
       white: '#FFFFFF',
       black: '#000000',
+      
     },
     space: {
       'px': '1px',

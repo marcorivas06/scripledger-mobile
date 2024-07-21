@@ -27,6 +27,22 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-Black.ttf",
+            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-Bold.ttf",
+            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-ExtraBold.ttf",
+            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-Light.ttf",
+            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-Medium.ttf",
+            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-Regular.ttf",
+            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-SemiBold.ttf"
+          ]
+        }
+      ]
+    ]
   }
 }
