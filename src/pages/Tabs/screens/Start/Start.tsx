@@ -22,7 +22,6 @@ export function Start({ navigation }) {
   // Mock Data for Balances
   const [balances, setBalances] = useState<IBalance[]>([]);
   const [transactions, setTransactions] = useState<ITransactions[]>([]);
-  const [isExpanded, setIsExpanded] = useState(false);
   
   useEffect(() => {
     const { balances } = jsonForAccountData;
@@ -42,8 +41,8 @@ export function Start({ navigation }) {
     navigation.navigate(screen);
   };
 
-  const handleSeeAll = () => {
-    navigation.navigate(SCREENS.START_STACK.ALL_GIFTCARDS, { 
+  const handleSeeAllBalances = (screen) => {
+    navigation.navigate(screen, { 
       balances: balances
     });
   };
@@ -74,7 +73,7 @@ export function Start({ navigation }) {
       iconName: "email-send", // Replace with the actual icon name or SVG path
       iconAs: "MaterialCommunityIcons", // Replace with the actual icon name or SVG path
       gradientColor: ["#B14FFF", "#CA8FF8"],
-      action: () =>  navigateToScreen(SCREENS.START_STACK.SEND)
+      action: () =>  handleSeeAllBalances(SCREENS.START_STACK.SEND)
     },
     {
       name: "Receive",
@@ -93,36 +92,28 @@ export function Start({ navigation }) {
           userName="Marcos"
           isHomePage={true}
           rightHeaderComponent={
-            <CircularButton name="settings" as="Feather" radius="$full" onPress={handleSettings}/>
+            <CircularButton name="settings" as="Feather" radius="$full" onPress={handleSettings} />
           }
         />
         <Section isHigherOpacity={true}>
-            <>
-            <MyHeader
+          <MyHeader
             title="My Wallet"
             marginBottom={15}
-            rightHeaderComponent=
-            {
-            <TouchableOpacity onPress={handleSeeAll}  style={styles.goBackButton}>
-              <HStack alignItems="center">
-                <TabIcon  as="MaterialCommunityIcons" name="eye" size="xs" />
-                <Text marginHorizontal={5} style={styles.goBackText}>See All</Text>
-              </HStack>
-            </TouchableOpacity>
+            rightHeaderComponent={
+              <TouchableOpacity onPress={() => handleSeeAllBalances(SCREENS.START_STACK.ALL_GIFTCARDS)} style={styles.goBackButton}>
+                <HStack alignItems="center">
+                  <TabIcon as="MaterialCommunityIcons" name="eye" size="xs" />
+                  <Text marginHorizontal={5} style={styles.goBackText}>See All</Text>
+                </HStack>
+              </TouchableOpacity>
             }
             isSubsectionHeader={true}
           />
           <HorizontalGiftCardTile balances={balances} />
-          </>
         </Section>
         <Section isHigherOpacity={false}>
           <StartActionButtons actionArray={actions} />
           <TransactionHistory transactions={transactions} />
-          <Button onPress={actions[0].action} >
-           <Text>
-            HELLO
-            </Text> 
-          </Button>
         </Section>
       </ScrollView>
     </Page>

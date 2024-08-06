@@ -1,4 +1,3 @@
-
 import { VStack } from "@gluestack-ui/themed";
 import { VerticalGiftCardTile } from "@components/molecules/GiftCardTile";
 import { Page } from "@components/molecules/Page";

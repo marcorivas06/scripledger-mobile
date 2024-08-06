@@ -9,7 +9,8 @@ import { AddGiftCard } from "./AddGiftCard";
 import { Pay } from "./Pay";
 import { Receive } from "./Receive";
 import { Send } from "./Send";
-
+import { SendToAddress } from "./SendToAddress";
+import { SubmitSend } from "./SubmitSend";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,7 +19,7 @@ const defaultScreenOptions = {
     headerTintColor: "rgba(242, 257, 257, 0.8)"
 };
 
-const HeaderExitLeft = ({backgroundColor = '#FFF1FF', onPress, color = '#1f2937'}) => (
+const HeaderExitLeft = ({backgroundColor, onPress, color = '#1f2937'}) => (
   <View alignItems="flex-end" >
     <TouchableOpacity onPress={onPress}  style={[styles.goBackButton, {backgroundColor:backgroundColor}]}>
     <View alignItems="center" >
@@ -74,6 +75,26 @@ export function StartTab() {
       <Stack.Screen
         name={SCREENS.START_STACK.PAY}
         component={Pay}
+        options={({ navigation }) => ({
+          ...defaultScreenOptions,
+          presentation: "fullScreenModal",
+          headerShown: true,
+          headerTransparent:true,
+          headerTitle:'',
+          headerLeft: () => {
+            return (
+              <HeaderExitLeft
+              backgroundColor="transparent"
+              color='white'
+              onPress={navigation.goBack}
+            />
+            );
+          },
+        })}
+      />
+      <Stack.Screen
+        name={SCREENS.START_STACK.SEND}
+        component={Send}
         options={{
           ...defaultScreenOptions,
           headerShown: true,
@@ -82,8 +103,18 @@ export function StartTab() {
         }}
       />
       <Stack.Screen
-        name={SCREENS.START_STACK.SEND}
-        component={Send}
+        name={SCREENS.START_STACK.SEND_TO_ADDRESS}
+        component={SendToAddress}
+        options={{
+          ...defaultScreenOptions,
+          headerShown: true,
+          headerTransparent:true,
+          headerTitle:'',
+        }}
+      />
+      <Stack.Screen
+        name={SCREENS.START_STACK.SUBMIT_SEND}
+        component={SubmitSend}
         options={{
           ...defaultScreenOptions,
           headerShown: true,
