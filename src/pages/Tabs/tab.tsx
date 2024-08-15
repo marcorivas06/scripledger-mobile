@@ -15,12 +15,17 @@ const PageIcons = {
 const Tab = createBottomTabNavigator<BottomStack>();
 export function Tabs() {
   return (
+    <>
       <Tab.Navigator
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          //tabBarShowLabel: false,
-          tabBarStyle: styles.tabBarStyle,
-        })}
+        screenOptions={({ route }) => {
+          return {
+            headerShown: false,
+            tabBarStyle: { 
+              height: 80,
+              backgroundColor:'transparent',
+            }
+          }
+        }}
       >
         <Tab.Screen
           name={STACKS.START}
@@ -38,9 +43,6 @@ export function Tabs() {
           options={{ tabBarIcon: PageIcons.history }}
         />
       </Tab.Navigator>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  tabBarStyle: { height: 80, backgroundColor:'rgba(238, 232, 244, 1)' },
-});

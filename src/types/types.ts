@@ -31,4 +31,5 @@ export interface IStartActionButton{
   iconName: string, // Replace with the actual icon name or SVG path
   iconAs: string, // Replace with the actual icon name or SVG path
   gradientColor:Array<string>;
+  action: () => void;
 }

@@ -19,13 +19,8 @@
     },
     {
       "token_id": "2",
-      "token_name": "Google Play Store",
+      "token_name": "Google Play",
       "balance": 25.33
-    },
-    {
-      "token_id": "3",
-      "token_name": "American Airlines",
-      "balance": 29.84
     }
   ]
 }

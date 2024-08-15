@@ -4,25 +4,26 @@ import { StyleSheet } from "react-native";
 import { TabIcon } from './TabIcon';
 import { Text, VStack, HStack, Button, View, Box, Input,InputField } from "@gluestack-ui/themed";
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { GetBrandsTitleForId, SvgComponent } from "@assets/BrandsSvgs/BrandsSvgs";
+import { useEffect, useState } from 'react';
 
 export const DropDownExchange = ({ data,...props  }) => {
+
+  const [selectedBrand, setSelectedBrand] = useState(0)
+  
   return (
       <SelectDropdown
         data={data}
         onSelect={(selectedItem, index) => {
-          console.log(selectedItem, index);
+          setSelectedBrand(selectedItem)
         }}
         renderButton={(selectedItem, isOpened) => {
           return (
             <View style={styles.dropdownButtonStyle}>
               <HStack alignItems='center'>
               {selectedItem && (
-                <TabIcon marginRight={10} as='MaterialCommunityIcons' name={selectedItem.icon}/>
+                <SvgComponent id={selectedBrand.id} style={styles.svgIcon} />
               )}
-              
-              <Text style={styles.dropdownButtonTxtStyle}>
-                {(selectedItem && selectedItem.title) || 'Select brand'}
-              </Text>
                 <TabIcon size='sm' marginRight={10} as='MaterialCommunityIcons' name={isOpened ? 'chevron-up' : 'chevron-down'} />
               </HStack>
             </View>
@@ -31,7 +32,7 @@ export const DropDownExchange = ({ data,...props  }) => {
         renderItem={(item, index, isSelected) => {
           return (
             <View style={{ ...styles.dropdownItemStyle, ...(isSelected && { backgroundColor: '#D2D9DF' }) }}>
-              <TabIcon as='MaterialCommunityIcons' name={item.icon} style={styles.dropdownItemIconStyle} />
+              <SvgComponent id={item.id} style={styles.svgIcon} />
               <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
             </View>
           );
@@ -44,7 +45,7 @@ export const DropDownExchange = ({ data,...props  }) => {
 
 const styles = StyleSheet.create({
   dropdownButtonStyle: {
-    width: 140,
+    width:'50%',
     height: 33,
     backgroundColor: '#E9ECEF',
     borderRadius: 20,
@@ -59,9 +60,13 @@ const styles = StyleSheet.create({
     color: '#151E26',
     
   },
+  svgIcon: {
+    marginRight: 0,
+  },
   dropdownMenuStyle: {
     backgroundColor: '#E9ECEF',
     borderRadius: 8,
+    width:150
   },
   dropdownItemStyle: {
     width: '100%',
@@ -76,7 +81,7 @@ const styles = StyleSheet.create({
     fontSize: 12, // Adjust font size to fit item height
     fontWeight: '500',
     color: '#151E26',
-    
+    marginHorizontal:5,
   },
   dropdownItemIconStyle: {
     fontSize: 16, // Adjust icon size to fit item height

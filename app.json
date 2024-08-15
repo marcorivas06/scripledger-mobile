@@ -4,7 +4,7 @@
     "slug": "scripLedger",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/playstore.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -16,31 +16,25 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.marcosrivas1806.scripLedger"
+      "bundleIdentifier": "com.scripledger.app"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.marcosrivas1806.scripLedger"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon.png"
     },
     "plugins": [
       [
-        "expo-font",
+        "expo-camera",
         {
-          "fonts": [
-            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-Black.ttf",
-            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-Bold.ttf",
-            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-ExtraBold.ttf",
-            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-Light.ttf",
-            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-Medium.ttf",
-            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-Regular.ttf",
-            "./assets/fonts/DarkerGrotesque/static/DarkerGrotesque-SemiBold.ttf"
-          ]
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "recordAudioAndroid": true
         }
       ]
     ]

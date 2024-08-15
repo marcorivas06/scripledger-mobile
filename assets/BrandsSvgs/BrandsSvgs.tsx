@@ -28,7 +28,7 @@ export function GetBrandsTitleForId(id):string{
   return ''; // Return an empty string if no icon is found
 }
 
-export const SvgComponent = ({ id }) => {
+export const SvgComponent = ({ id, ...props }) => {
   const icon = BRAND_ICONS[id].svg;
   if (!icon) return null;
   return (

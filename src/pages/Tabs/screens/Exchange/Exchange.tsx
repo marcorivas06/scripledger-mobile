@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CircularButton } from "@components/atoms/CircularButton";
 import { TabIcon } from "@components/atoms/TabIcon";
 import { Page, MyHeader, Section } from "@components/molecules/Page";
@@ -17,23 +17,11 @@ import {
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { InputAmount } from "@components/molecules/InputAmount";
 import { ExchangeBrandsInfoBox } from "@components/atoms/ExchangeBrandsInfoBox";
+import JsonForBrands  from "@src/mock/brands.json";
+import { ActionButton } from "@components/atoms/ActionButton";
+import { SCREENS } from "@constants";
+import { STACKS } from "@types/routes";
 
-const emojisWithIcons = [
-  { title: "happy", icon: "emoticon-happy-outline" },
-  { title: "cool", icon: "emoticon-cool-outline" },
-  { title: "lol", icon: "emoticon-lol-outline" },
-  { title: "sad", icon: "emoticon-sad-outline" },
-  { title: "cry", icon: "emoticon-cry-outline" },
-  { title: "angry", icon: "emoticon-angry-outline" },
-  { title: "confused", icon: "emoticon-confused-outline" },
-  { title: "excited", icon: "emoticon-excited-outline" },
-  { title: "kiss", icon: "emoticon-kiss-outline" },
-  { title: "devil", icon: "emoticon-devil-outline" },
-  { title: "dead", icon: "emoticon-dead-outline" },
-  { title: "wink", icon: "emoticon-wink-outline" },
-  { title: "sick", icon: "emoticon-sick-outline" },
-  { title: "frown", icon: "emoticon-frown-outline" },
-];
 
 const mockData = [
   { icon: "apple", name: "Apple", dollar: 1.2, percentRate: -1.3 },
@@ -41,7 +29,27 @@ const mockData = [
   { icon: "google", name: "Google", dollar: 0.8, percentRate: 2.5 },
 ];
 
-export function Exchange() {
+export function Exchange({ navigation }) {
+  const [brands, SetBrands] = useState([])
+  
+  
+  useEffect(() => {
+    const brandsData = JsonForBrands.brands.map((brand) => {
+      return {
+        id: brand.id,
+        title: brand.title,
+        icon: brand.icon
+      }
+    })  
+    SetBrands(brandsData);
+  }, [])  
+
+  const handleSettings = () => {
+    navigation.navigate(STACKS.MODAL, {
+      screen: SCREENS.MODAL_STACK.SETTINGS
+    });
+  };
+
   return (
     <Page fullWidth>
       <ScrollView style={{ flex: 1 }}>
@@ -49,31 +57,26 @@ export function Exchange() {
           title="Exchange"
           isHomePage={false}
           rightHeaderComponent={
-            <CircularButton name="settings" as="Feather" radius="$full" />
+            <CircularButton name="settings" as="Feather" radius="$full" onPress={handleSettings} />
           }
         />
         <Section isHigherOpacity={true}>
           <VStack alignItems="center">
-            <InputAmount typeOfInput="Sell" data={emojisWithIcons} />
-            <TabIcon size="sm" as="Ionicons" name="arrow-down" />
-            <InputAmount typeOfInput="Buy" data={emojisWithIcons} />
+            <InputAmount 
+            typeOfInput="Sell"
+            data={brands}
+            isDropdown={true}
+            />
+            <TabIcon size="xs" color='$gray' as="Ionicons" name="arrow-down" />
+            <InputAmount 
+            typeOfInput="Buy"
+             data={brands}
+            isDropdown={true}
+              />
           </VStack>
         </Section>
         <Section isHigherOpacity={false}>
-          <Button
-            width={358}
-            margin={17}
-            borderRadius="$full"
-            size="lg"
-            variant="solid"
-            bgColor="black"
-            action="primary"
-          >
-            <ButtonText>Swap</ButtonText>
-            <ButtonIcon>
-              <TabIcon as="AntDesign" name="swap" color="white" />
-            </ButtonIcon>
-          </Button>
+        <ActionButton buttonName='Swap' width={350} />
           {mockData.map((e, index) => (
             <ExchangeBrandsInfoBox
               key={`${e.name}-${index}`}
@@ -88,3 +91,4 @@ export function Exchange() {
     </Page>
   );
 }
+

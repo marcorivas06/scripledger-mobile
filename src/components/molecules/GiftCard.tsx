@@ -8,17 +8,16 @@ import { useFonts } from 'expo-font';
 
 
 
-export const GiftCard = ({ balance, token_id, token_name }) => {
-  
+export const HorizontalGiftCard = ({ balance, token_id, token_name }) => {
   return (
   <TouchableOpacity>
-    <Box style={styles.cardContainer}>
+    <Box style={horizontalStyles.cardContainer}>
         <VStack>
-          <HStack style={styles.header}>
-            <SvgComponent id={token_id} style={styles.svgIcon} />
-            <Text style={[styles.tokenName, {fontFamily:'DarkerGrotesque-Bold'}] }>{token_name}</Text>
+          <HStack style={horizontalStyles.header}>
+            <SvgComponent id={token_id} />
+            <Text style={horizontalStyles.tokenName}>{token_name}</Text>
           </HStack>
-          <Text style={[styles.balance, {fontFamily:'DarkerGrotesque-SemiBold'}]}>
+          <Text style={[horizontalStyles.balance, {fontFamily:'DarkerGrotesque-SemiBold', color:'#51382F'}]}>
             $ {balance}
           </Text>
         </VStack>
@@ -27,15 +26,32 @@ export const GiftCard = ({ balance, token_id, token_name }) => {
 );
 }
 
-const styles = StyleSheet.create({
+export const VerticalGiftCard = ({ balance, token_id, token_name, onPress }) => {
+  return (
+  <TouchableOpacity onPress={onPress} >
+    <Box style={verticalStyles.cardContainer}>
+        <HStack alignItems='center'>
+            <SvgComponent id={token_id} />
+            <VStack marginHorizontal={20} justifyContent='flex-end' >
+              <Text style={verticalStyles.tokenName}>{token_name}</Text>
+              <Text style={[verticalStyles.balance, {fontFamily:'DarkerGrotesque-SemiBold', color:'#51382F'}]}>
+                $ {balance}
+              </Text>
+            </VStack>
+        </HStack>
+      </Box>
+  </TouchableOpacity>
+);
+}
+
+const horizontalStyles = StyleSheet.create({
   cardContainer: {
     height: 120,
     width: 150,  // Adjust width as needed
     backgroundColor: '#FFF',
-    borderRadius: 10,
-    margin: 10,
-    marginBottom:35,
-    padding: 15,
+    borderRadius: 6,
+    marginHorizontal: 10,
+    padding: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -44,17 +60,13 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
-  },
-  svgIcon: {
-    marginRight: 10,
   },
   tokenName: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
-    fontFamily: 'DarkerGrotesque-Black',
-    color: '#51382F',
-    padding:5,
+    marginLeft:10,
+    fontFamily:'DarkerGrotesque-SemiBold',
+    color:'#51382F'
   },
   balance: {
     fontSize: 21,
@@ -63,5 +75,32 @@ const styles = StyleSheet.create({
     color: '#51382F',
     marginTop: 5,
     padding: 5,
+  }
+});
+
+const verticalStyles = StyleSheet.create({
+  cardContainer: {
+    backgroundColor: '#FFF',
+    borderRadius: 30,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 3,
+    alignItems:'center',
+  },
+  tokenName: {
+    fontSize: 16,
+    fontWeight: '600',
+    fontFamily:'DarkerGrotesque-SemiBold',
+    color:'#51382F'
+  },
+  balance: {
+    fontSize: 21,
+    fontWeight: 'bold',
+    fontFamily: 'DarkerGrotesque-Light',
+    color: '#51382F',
+    
   }
 });

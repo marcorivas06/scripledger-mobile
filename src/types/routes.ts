@@ -7,6 +7,7 @@ export enum STACKS {
   EXCHANGE = 'Exchange',
   HISTORY = 'History',  
   MAIN = 'Main',
+  MODAL = "ModalStack"
 }
 export enum SCREENS {}
 
@@ -19,4 +20,5 @@ export type BottomStack = {
 
 export type RootStack = {
   [STACKS.MAIN]: undefined;
+  [STACKS.MODAL]: undefined;
 };

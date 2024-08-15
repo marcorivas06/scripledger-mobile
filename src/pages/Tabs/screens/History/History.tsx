@@ -3,26 +3,17 @@ import { StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
 import { Page, MyHeader, Section } from "@components/molecules/Page";
 import { CircularButton } from "@components/atoms/CircularButton";
 import { ToggleHistory } from "@components/atoms/ToggleHistory";
-import {
-  Box,
-  HStack,
-  Avatar,
-  AvatarFallbackText,
-  AvatarBadge,
-  Heading,
-  Text,
-  VStack,
-} from "@gluestack-ui/themed";
 import jsonForTransactions from "@src/mock/accountResponseTransactions.json";
-import { IBalance, IStartActionButton, ITransaction } from "@types/types";
+import { AvatarTransaction } from "@components/molecules/AvatarTransactions";
+import { SCREENS } from "@constants";
+import { STACKS } from "@types/routes";
 
-export function History() {
+export function History({ navigation }) {
   const [selectedTab, setSelectedTab] = useState("All");
   const [transactions, setTransactions] = useState<ITransactions[]>([]);
   const [filteredTransactions, setfilteredTransactions] = useState([]);
 
   const handleTabSelect = (tab) => {
-    console.log({ tab });
     setSelectedTab(tab);
   };
 
@@ -48,17 +39,24 @@ export function History() {
     setfilteredTransactions(liveTransactions);
   }, [selectedTab, transactions]);
 
+  const handleSettings = () => {
+    navigation.navigate(STACKS.MODAL, {
+      screen: SCREENS.MODAL_STACK.SETTINGS
+    });
+  };
+
   return (
     <Page fullWidth>
       <ScrollView style={{ flex: 1 }}>
+        <MyHeader
+          title="History"
+          isHomePage={false}
+          marginBottom={20}
+          rightHeaderComponent={
+            <CircularButton name="settings" as="Feather" radius="$full" onPress={handleSettings} />
+          }
+        />
         <Section isHigherOpacity={false}>
-          <MyHeader
-            title="History"
-            isHomePage={false}
-            rightHeaderComponent={
-              <CircularButton name="settings" as="Feather" radius="$full" />
-            }
-          />
           <ToggleHistory
             handleTabSelect={handleTabSelect}
             selectedTab={selectedTab}
@@ -85,24 +83,3 @@ export function History() {
   );
 }
 
-const AvatarTransaction = ({ name, date, amount }) => {
-  return (
-    <Box borderBottomWidth={1} borderBottomColor="#CAC4D0" padding={10}>
-      <HStack space="lg" justifyContent="space-between" alignItems="center">
-        <View>
-          <HStack space="md">
-            <Avatar>
-              <AvatarFallbackText>{name}</AvatarFallbackText>
-              <AvatarBadge />
-            </Avatar>
-            <VStack>
-              <Heading size="sm">{name}</Heading>
-              <Text size="sm">{name}</Text>
-            </VStack>
-          </HStack>
-        </View>
-        <Text>{amount}</Text>
-      </HStack>
-    </Box>
-  );
-};

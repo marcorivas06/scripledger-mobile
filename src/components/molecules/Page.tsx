@@ -1,7 +1,7 @@
 import { Box, Heading, HStack, ScrollView, View, VStack } from '@gluestack-ui/themed';
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Animated  } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export function Page({
@@ -26,6 +26,28 @@ export function Page({
     </View>
   );
 }
+
+export function CameraPage({
+  children,
+  headerShown,
+  fullWidth = false,
+  containerStyle = {},
+  ...props
+}) {
+  return (
+    <View
+    style={[
+        styles.container,
+        containerStyle,
+      ]}
+    >
+        <Box h="100%" {...props}>
+          {children}
+        </Box> 
+    </View>
+  );
+}
+
 export function Section({
   children,
   isHigherOpacity,
@@ -35,10 +57,30 @@ export function Section({
     <View
       backgroundColor={isHigherOpacity ? '$background_higher_opacity' : ''  }
     >
-        <Box style={{ paddingHorizontal: 16, width: '100%', alignItems:'center' }}>
+        <VStack style={{ paddingHorizontal: 16, width: '100%', alignItems:'center', marginBottom:20 }}>
           {children}
-        </Box> 
+        </VStack> 
     </View>
+  );
+}
+
+export function AnimatedSection({
+  children,
+  isHigherOpacity,
+  animatedStyle,
+  ...props
+}) {
+  return (
+    <Animated.View
+      style={[{
+        backgroundColor: isHigherOpacity ? 'rgba(103, 80, 164, 0.11)' : '',
+        height:'100%'
+      }, animatedStyle]}
+    >
+        <VStack style={{ paddingHorizontal: 16, width: '100%', alignItems:'center', marginBottom:20 }}>
+          {children}
+        </VStack> 
+    </Animated.View>
   );
 }
 
@@ -48,28 +90,35 @@ export function MyHeader({
   isHomePage,
   rightHeaderComponent,
   isSubsectionHeader,
+  marginBottom,
+  marginTop,
+  ...props
 }) {
   const header = useMemo(
     () => (
-      <HStack style={styles.pageTitle}>
+      <HStack style={[styles.pageTitle, {marginBottom:20, marginTop:marginTop}]}>
         {isHomePage ? (
-          <VStack>
-            <Heading color='$global_font_color' size="2xl" textTransform="capitalize">
-              {title}
-            </Heading>
-            <Heading color='$header_font_color' size="2xl" textTransform="capitalize">
-              {userName} 👋
-            </Heading>
+          <VStack >
+            <View height={50} >
+              <Heading color='$global_font_color' size="lg" >
+                {title}
+              </Heading>
+              <Heading color='$header_font_color' size="lg" >
+                {userName} 👋
+              </Heading>
+            </View>
           </VStack>
         ) : (
           isSubsectionHeader ? (
-            <Heading color='$global_font_color' size="md">
+            <Heading color='$mid_header' size="lg" fontFamily='DarkerGrotesque-Bold' >
               {title}
             </Heading>
           ) : (
-            <Heading color='$global_font_color' size="2xl" textTransform="capitalize">
-              {title}
-            </Heading>
+            <View height={50} >
+              <Heading color='$global_font_color' size="lg">
+                {title}
+              </Heading>
+            </View>
           )
         )}
         {rightHeaderComponent && rightHeaderComponent}
@@ -124,15 +173,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 8,
-    paddingVertical: 8,
     paddingHorizontal: 16,
-    marginBottom:20,
   },
   container: {
     flex: 1,
     height: '100%',
-    backgroundColor:'rgba(103, 80, 164, 0.05)',
+    backgroundColor:'rgba(103, 80, 164, 0.1)',
   },
   overlay: {
     // Purple color with 11% opacity

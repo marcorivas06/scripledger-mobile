@@ -1,0 +1,39 @@
+{
+  "brands": [
+    {
+      "id": "0",
+      "title": "Steam",
+      "icon": "siSteam"
+    },
+    {
+      "id": "1",
+      "title": "Huawei",
+      "icon": "siHuawei"
+    },
+    {
+      "id": "2",
+      "title": "Google Play",
+      "icon": "siGoogleplay"
+    },
+    {
+      "id": "3",
+      "title": "American Airlines",
+      "icon": "siAmericanairlines"
+    },
+    {
+      "id": "4",
+      "title": "Apple Music",
+      "icon": "siApplemusic"
+    },
+    {
+      "id": "5",
+      "title": "Airbnb",
+      "icon": "siAirbnb"
+    },
+    {
+      "id": "6",
+      "title": "Amazon",
+      "icon": "siAmazon"
+    }
+  ]
+}

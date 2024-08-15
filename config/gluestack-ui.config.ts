@@ -33,6 +33,7 @@ export const gluestackUIConfig = createConfig({
       secondary: "#4D9EFF",
       info: "#C4ECF9", 
       inputbackground: "rgba(242, 257, 257, 0.8)",
+      mid_header: "#51382F",
       background: "rgba(103, 80, 164, 0.05)",
       background_higher_opacity:'rgba(103, 80, 164, 0.11)',
       text: "#323F4B", 

@@ -8,14 +8,14 @@ import { config } from "./config/gluestack-ui.config"
 // import { config } from "@gluestack-ui/config"; // Optional if you want to use default theme
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import { loadFonts } from "@helper/loadFonts";
+import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
+import { TextEncoder, TextDecoder } from 'text-encoding';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const [loaded, error] = useFonts({
-    'DarkerGrotesque-SemiBold': require("./assets/fonts/Darker_Grotesque/static/DarkerGrotesque-Black.ttf"),
-    'DarkerGrotesque-Bold': require("./assets/fonts/Darker_Grotesque/static/DarkerGrotesque-Bold.ttf"),
-  });
+  const [loaded, error] = useFonts(loadFonts());
 
   useEffect(() => {
     if (loaded || error) {
@@ -27,12 +27,17 @@ export default function App() {
     return null;
   }
 
+  global.TextEncoder = TextEncoder;
+  global.TextDecoder = TextDecoder;
+
   
   return (
     <StyledProvider config={config}>
-      <GestureHandlerRootView style={styles.AppWrapper}>
-          <RootNavigator />
-      </GestureHandlerRootView>
+      <AutocompleteDropdownContextProvider>
+        <GestureHandlerRootView style={styles.AppWrapper}>
+            <RootNavigator />
+        </GestureHandlerRootView>
+      </AutocompleteDropdownContextProvider>
     </StyledProvider>
   );
 }
