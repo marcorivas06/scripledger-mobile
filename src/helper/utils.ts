@@ -6,3 +6,4 @@ export function formatBalanceForAutocomplete(balances): {id:string, title:string
   }));
   return formattedBalances;
 }
+

@@ -12,11 +12,16 @@ import { loadFonts } from "@helper/loadFonts";
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import { TextEncoder, TextDecoder } from 'text-encoding';
 
+import { Buffer } from 'buffer';
+
+// import "./global.native"
+
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [loaded, error] = useFonts(loadFonts());
 
+  global.Buffer = Buffer;
   useEffect(() => {
     if (loaded || error) {
       SplashScreen.hideAsync();

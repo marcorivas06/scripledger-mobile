@@ -17,12 +17,59 @@ import { TabIcon } from "@components/atoms/TabIcon";
 import { STACKS } from "@types/routes";
 
 
+import * as Crypto from 'expo-crypto';
+import { ethers } from "ethers";
+// 
+
 // Would come from a request
 export function Start({ navigation }) {
   // Mock Data for Balances
   const [balances, setBalances] = useState<IBalance[]>([]);
   const [transactions, setTransactions] = useState<ITransactions[]>([]);
+
+  // ---
+  //Generate Mnemonic generates the phrase. 
+  async function generateMnemonic(){
+    const randomBytes = await Crypto.getRandomBytesAsync(32);
+    const mnemonic = ethers.Mnemonic.fromEntropy(randomBytes)
+    return mnemonic.phrase;
+  };
+
+
+async function mnemonicToSeed(mnemonic: string){
+    const bip39 = await import("bip39");
+    const seed = await bip39.mnemonicToSeed(mnemonic);
+    return Buffer.from(seed).toString("hex");
+  };
+
+  async function test() {
+    try {
+      
+      const mnemonic = await generateMnemonic();
+      const seed = await mnemonicToSeed(mnemonic);
+      console.log(seed);
+
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  test();
+
+  // mnemonicToSeed(x);
+
   
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const x  = await generateMnemonic();
+  //     console.log(x)
+  //   })();
+    
+  // }, []);
+  
+  
+  // ----
   useEffect(() => {
     const { balances } = jsonForAccountData;
     const { transactions } = jsonForTransactions;

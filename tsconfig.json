@@ -3,6 +3,8 @@
   "compilerOptions": {
     "allowJs": true, // Allow JavaScript files to be compiled.
     "baseUrl": ".",
+    "module": "es2020", // or es2022, esnext, commonjs, etc.
+    "target": "es2020", // or es2022, esnext, etc.
     "paths": {
       "@*": ["./src/*"],
       "@components/*": ["./src/components/*"],
