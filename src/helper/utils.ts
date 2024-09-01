@@ -18,6 +18,7 @@ import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 // import { fetchGetAssociatedTokenAccount } from "@actions/fetchAssociatedAccount";
 import { Buffer } from "@craftzdog/react-native-buffer";
 import * as bs58 from "bs58";
+import * as bip39 from "bip39"
 
 export function formatBalanceForAutocomplete(balances): {id:string, title:string}[]{
   const formattedBalances = balances.map(token => ({
@@ -45,7 +46,6 @@ export function formatBalanceForAutocomplete(balances): {id:string, title:string
   // Step 2
   export async function mnemonicToSeed(mnemonic: string) {
     try {
-      const bip39 = await import("bip39");
       const seed = await bip39.mnemonicToSeed(mnemonic);
       return Buffer.from(seed).toString("hex");
     } catch (error) {
@@ -97,10 +97,6 @@ export function formatBalanceForAutocomplete(balances): {id:string, title:string
   export async function test() {
     try {
       
-    
-      // const masterPayerKeypair = solanaWeb3.Keypair.fromSecretKey(masterPayerSecretKey);
-      // const payerPublicKey = masterPayerKeypair.publicKey;
-
       let connection = await createConnection();
       let qrcodeString = "solana:4PPA4dSZtZvd5LuWcToN9q5xvxbatx6Gt4kELhtbYV9LgzQ7UH4QcqCSCJL5MRFWZCtRY1PhNyfERMWj5F634STD?spl-token=GAJjz8d5n7Gi4BNG3AD3684X7NPnyjuKmvjkbgyZpktf&label=Scrip%20Ledger%20Gift%20Card%20Unlock%20Key";
       
@@ -112,6 +108,7 @@ export function formatBalanceForAutocomplete(balances): {id:string, title:string
       const label = decodeURIComponent(url.searchParams.get("label"));
       
       const giftCardKeyPair = solanaWeb3.Keypair.fromSecretKey(bs58.decode(giftCardSecretKey))
+
       /*
       connection,
       mintPubKey,
@@ -121,12 +118,15 @@ export function formatBalanceForAutocomplete(balances): {id:string, title:string
       amount,
       decimal 
       */
-      const recipientKeyPair  =  await generateKeyPair();
-      let masterPayerPubKey:solanaWeb3.PublicKey = new solanaWeb3.PublicKey("CXb8JftpUcCAyQrp2TaUzqC8xx7cdvfBvoNcD1nMgNkS"); 
+  
+      let masterPayerPubKey:solanaWeb3.PublicKey = new solanaWeb3.PublicKey(process.env.EXPO_PUBLIC_MASTERPAYER_PUBKEY); 
+      const recipientKeyPair = await generateKeyPair();
+      
+      // let masterPayerPubKey:solanaWeb3.PublicKey = new solanaWeb3.PublicKey("CXb8JftpUcCAyQrp2TaUzqC8xx7cdvfBvoNcD1nMgNkS"); 
 
       // get Balance on the GiftCard Addrress
       // get Balance 
-      console.log(EXPO_PUBLIC_MASTER_PAYER_PUBKEY_STRING) 
+      // console.log(process.env.EXPO_PUBLIC_MASTER_PAYER_PUBKEY_STRING) 
       // reedemGiftCard(connection, mintPubKey, giftCardKeyPair, recipientKeyPair.PublicKey, masterPayerPubKey)
       
       // console.log(process.env.MASTER_PAYER_PUBKEY_STRING)
