@@ -14,7 +14,11 @@
       "@constants/*": ["./src/constants/*"],
       "@mocks/*": ["./mocks/*"],
       "@assets/*": ["./assets/*"],
+      "@helper/*": ["./src/helper/*"],
       "@db/*": ["./src/mongodb/*"],
+      "crypto": [
+        "node_modules/crypto-browserify"
+      ],
 
       // TODO: Remove
       // Backward compatibility, should not be used anymore.
