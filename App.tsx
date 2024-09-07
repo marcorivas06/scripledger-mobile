@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import React, { useEffect } from "react";
 import { GluestackUIProvider, Text, Box, VStack } from "@gluestack-ui/themed";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -12,11 +13,15 @@ import { loadFonts } from "@helper/loadFonts";
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import { TextEncoder, TextDecoder } from 'text-encoding';
 
+import { Buffer } from "@craftzdog/react-native-buffer";
+
+// import "./global.native"
+global.Buffer = require('buffer').Buffer;
+// global.crypto = require('expo-crypto')
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [loaded, error] = useFonts(loadFonts());
-
   useEffect(() => {
     if (loaded || error) {
       SplashScreen.hideAsync();

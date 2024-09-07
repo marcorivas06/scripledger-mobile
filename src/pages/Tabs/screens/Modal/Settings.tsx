@@ -7,8 +7,14 @@ import { TouchableOpacity } from "react-native";
 import { HStack } from "@gluestack-ui/themed";
 import { TabIcon } from "@components/atoms/TabIcon";
 import { ActionButton } from "@components/atoms/ActionButton";
+import { getOrCreateUserSecretKey } from "@utils/secureStore";
 
 export const Settings = ({navigation}) => {
+  
+  const handleSecureStorage = async() => {
+    getOrCreateUserSecretKey();
+  }
+  
   return (
     <Page fullWidth>
       <ScrollView style={{ flex: 1 }} >
@@ -36,9 +42,14 @@ export const Settings = ({navigation}) => {
         
         <SettingActionForCategory categoryTitle='General' data={general} />
         <SettingActionForCategory categoryTitle='Help Us' data={helpUs} />
-        <View marginTop={20} alignItems="flex-start">
-          <ActionButton buttonName='Log Out' width={120} />
-        </View>
+        <HStack justifyContent="space-between">
+          <View marginTop={20} alignItems="flex-start">
+            <ActionButton buttonName='Log Out' width={120} />
+          </View>
+          <View marginTop={20} alignItems="flex-start">
+            <ActionButton buttonName='Display SK' width={130} bg="#00F" onPress={handleSecureStorage} />
+          </View>
+        </HStack>
         </ScrollView>
     </Page>
   )

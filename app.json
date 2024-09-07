@@ -16,14 +16,21 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.scripledger.app"
+      "bundleIdentifier": "com.scripledger.app",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.marcosrivas1806.scripLedger"
+      "package": "com.marcosrivas1806.scripLedger",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/icon.png"
@@ -34,9 +41,21 @@
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "recordAudioPermission": "Allow $(PRODUCT_NAME) to access audio recording",
           "recordAudioAndroid": true
         }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+        }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "140c7678-b9d8-41a8-8858-22aa3765a5f6"
+      }
+    }
   }
 }
