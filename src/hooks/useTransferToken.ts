@@ -69,17 +69,6 @@ export async function useTransferToken(transactionInfo: ITransaction){
     }
 }
 
-// after handleScan pass objet to getBalance
-// {}
-function getBalance(){
-  // let tokenAcctPubkey = splToken.getAssociatedTokenAddressSync(mintPubKey, giftCardPubKey);
-  // const info = await splToken.getAccount(connection, tokenAcctPubkey);
-  // const amount = Number(info.amount);
-  // const mint = await splToken.getMint(connection, info.mint);
-  // return { amount: amount,  decimals: mint.decimals }
-  return ""
-}
-
 async function handleTransfer(transactionInfo) {
   const { connection, mintPubKey, senderKeypair, recipientPublicKey, amount, decimal } = transactionInfo;
   

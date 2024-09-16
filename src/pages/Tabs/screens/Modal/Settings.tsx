@@ -7,12 +7,12 @@ import { TouchableOpacity } from "react-native";
 import { HStack } from "@gluestack-ui/themed";
 import { TabIcon } from "@components/atoms/TabIcon";
 import { ActionButton } from "@components/atoms/ActionButton";
-import { getOrCreateUserSecretKey } from "@utils/secureStore";
+import { getOrCreateUserSecureCredentials } from "@utils/secureStore";
 
 export const Settings = ({navigation}) => {
   
   const handleSecureStorage = async() => {
-    getOrCreateUserSecretKey();
+    const secureCredentials = getOrCreateUserSecureCredentials();
   }
   
   return (

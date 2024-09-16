@@ -1,13 +1,22 @@
-export interface IAccount{
-  account_id: string;
-  username_handle: string;
-  account_public_key: string;
-  first_txn_timestamp: string;
-  kyc_status: string;
-  alternate_account_id: number;
-  customer_profile: string;
-  balances: Array<IBalance>;
+import { PublicKey } from '@solana/web3.js';
+
+//Redux 
+export interface IUserPublic {
+  id: string | null;
+  username: string | null;
+  email: string | null;
+  phoneNumber: string | null;
+  accountPublicKey: string | null;          // Mapped from accountPublicKey
+  kycStatus: string | null;
+  customerProfile: string | null;
+  actionType: string | null;
+  category: string | null;
+  note: string | null;
+  userTransactions: IUserTransaction[] | null;
+  // Add any additional fields you decide to include
 }
+
+//Setup later
 export interface ITransaction{
   tokenId: string
   senderPublicKey: string
@@ -32,4 +41,13 @@ export interface IStartActionButton{
   iconAs: string, // Replace with the actual icon name or SVG path
   gradientColor:Array<string>;
   action: () => void;
+}
+
+export interface IUserTransaction{
+  mintAddress: PublicKey
+  tokenBalance: number  
+}
+
+export interface IUserTransactions{
+  transactions:Array<IUserTransaction>
 }

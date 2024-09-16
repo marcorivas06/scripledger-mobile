@@ -24,31 +24,43 @@ import { TouchableOpacity, StyleSheet } from "react-native";
 import { TabIcon } from "@components/atoms/TabIcon";
 import { STACKS } from "@types/routes";
 import { test } from '@src/helper/utils'
-
+import { useAppSelector } from "@hooks/store";
+import { useUserService } from "@services/useUserService";
+import { getAllTokenBalances } from "@utils/solanaUtils";
 //
 
 // Would come from a request
 export function Start({ navigation }) {
+  //App State
+  const user = useAppSelector((state) => state.user);
   // Mock Data for Balances
   const [balances, setBalances] = useState<IBalance[]>([]);
   const [transactions, setTransactions] = useState<ITransactions[]>([]);
-
+  const { fetchUser } = useUserService();
+  const [isLoading, setisLoading] = useState(true);
+  
   // ----
   useEffect(() => {
     const { balances } = jsonForAccountData;
     const { transactions } = jsonForTransactions;
-
     setBalances(balances);
     setTransactions(transactions);
+    
+    // Loading Data From Redux
+    fetchUserData();  
   }, []);
+  
+  
 
-  useEffect(() => {
+  async function fetchUserData(){
+    setisLoading(true);
     try {
-      test()
+      await fetchUser();
     } catch (error) {
-      console.error(error)
+      console.error("Failing fetching User Data at Home" + error)
     }
-  }, [])
+    setisLoading(false);
+  }
 
   const navigateToScreenHidingTabs = (screen) => {
     navigation.navigate(screen, {
@@ -110,7 +122,7 @@ export function Start({ navigation }) {
       <ScrollView style={{ flex: 1 }}>
         <MyHeader
           title="Welcome"
-          userName="Marcos"
+          userName={user.username}
           isHomePage={true}
           rightHeaderComponent={
             <CircularButton

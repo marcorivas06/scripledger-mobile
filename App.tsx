@@ -1,3 +1,4 @@
+global.Buffer = require('buffer').Buffer;
 import 'react-native-get-random-values';
 import React, { useEffect } from "react";
 import { GluestackUIProvider, Text, Box, VStack } from "@gluestack-ui/themed";
@@ -12,11 +13,13 @@ import * as SplashScreen from 'expo-splash-screen';
 import { loadFonts } from "@helper/loadFonts";
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import { TextEncoder, TextDecoder } from 'text-encoding';
+import { store } from '@src/store'
+import { Provider } from 'react-redux'
 
-import { Buffer } from "@craftzdog/react-native-buffer";
+// import { Buffer } from "@craftzdog/react-native-buffer";
 
 // import "./global.native"
-global.Buffer = require('buffer').Buffer;
+
 // global.crypto = require('expo-crypto')
 SplashScreen.preventAutoHideAsync();
 
@@ -37,13 +40,15 @@ export default function App() {
 
   
   return (
-    <StyledProvider config={config}>
-      <AutocompleteDropdownContextProvider>
-        <GestureHandlerRootView style={styles.AppWrapper}>
-            <RootNavigator />
-        </GestureHandlerRootView>
-      </AutocompleteDropdownContextProvider>
-    </StyledProvider>
+    <Provider store={store}>
+      <StyledProvider config={config}>
+        <AutocompleteDropdownContextProvider>
+          <GestureHandlerRootView style={styles.AppWrapper}>
+              <RootNavigator />
+          </GestureHandlerRootView>
+        </AutocompleteDropdownContextProvider>
+      </StyledProvider>
+    </Provider>
   );
 }
 
