@@ -7,7 +7,6 @@ import {
   Page,
   MyHeader,
   Section,
-  AnimatedSection,
 } from "@components/molecules/Page";
 import { Button, HStack, Text, View, VStack } from "@gluestack-ui/themed";
 import { useEffect, useRef, useState } from "react";
@@ -23,10 +22,9 @@ import { SCREENS } from "@constants";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { TabIcon } from "@components/atoms/TabIcon";
 import { STACKS } from "@types/routes";
-import { test } from '@src/helper/utils'
 import { useAppSelector } from "@hooks/store";
 import { useUserService } from "@services/useUserService";
-import { getAllTokenBalances } from "@utils/solanaUtils";
+// import { getAllTokenBalances } from "@utils/solanaUtils";
 //
 
 // Would come from a request
@@ -55,7 +53,7 @@ export function Start({ navigation }) {
   async function fetchUserData(){
     setisLoading(true);
     try {
-      await fetchUser();
+      // await fetchUser();
     } catch (error) {
       console.error("Failing fetching User Data at Home" + error)
     }
