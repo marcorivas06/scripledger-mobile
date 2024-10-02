@@ -9,7 +9,7 @@ import {
   Section,
 } from "@components/molecules/Page";
 import { Button, HStack, Text, View, VStack } from "@gluestack-ui/themed";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { IBalance, IStartActionButton, ITransaction } from "@types/types";
 import { StartActionButtons } from "@components/molecules/StartActionButtons";
@@ -22,43 +22,88 @@ import { SCREENS } from "@constants";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { TabIcon } from "@components/atoms/TabIcon";
 import { STACKS } from "@types/routes";
-import { useAppSelector } from "@hooks/store";
+import { useAppDispatch, useAppSelector } from "@hooks/store";
 import { useUserService } from "@services/useUserService";
+import { updateUser, updateUserWallet } from "@store/user";
 // import { getAllTokenBalances } from "@utils/solanaUtils";
 //
 
-// Would come from a request
 export function Start({ navigation }) {
   //App State
+  const dispatch = useAppDispatch();
+  
   const user = useAppSelector((state) => state.user);
+  const allBrands = useAppSelector((state) => state.brands );
   // Mock Data for Balances
   const [balances, setBalances] = useState<IBalance[]>([]);
   const [transactions, setTransactions] = useState<ITransactions[]>([]);
-  const { fetchUser } = useUserService();
-  const [isLoading, setisLoading] = useState(true);
-  
+  const { fetchUser, fetchAllBrands } = useUserService();
+  const [isLoading, setIsLoading] = useState(false)
+
   // ----
   useEffect(() => {
     const { balances } = jsonForAccountData;
     const { transactions } = jsonForTransactions;
     setBalances(balances);
     setTransactions(transactions);
+    fetchUserData();
     
-    // Loading Data From Redux
-    fetchUserData();  
   }, []);
   
-  
+  useEffect(() => {
+    // Step 1: Build a Map from mintPublicKey to brandName
+    if(!isLoading && user.userWallet){
+      const mintToBrandMap = new Map();
 
-  async function fetchUserData(){
-    setisLoading(true);
-    try {
-      // await fetchUser();
-    } catch (error) {
-      console.error("Failing fetching User Data at Home" + error)
-    }
-    setisLoading(false);
-  }
+      allBrands.brands.forEach(({ brandName, tokens }) => {
+        tokens.forEach((token) => {
+          mintToBrandMap.set(token['mintPublicKey'], brandName);
+        });
+      });
+
+      // Step 2: Use the Map to get transaction info
+      const getAllTransactionInfo = user.userWallet
+        .map(({ mintAddress, tokenBalance }) => {
+          const brandName = mintToBrandMap.get(mintAddress);
+          if (brandName) {
+            return { brandName, mintAddress, tokenBalance };
+          }
+          // Optionally handle cases where mintAddress is not found
+          return null;
+        })
+        .filter((item) => item !== null); // Remove any null entries
+
+      dispatch(updateUserWallet(getAllTransactionInfo))
+      
+      console.log(user.userWallet)
+      
+    }    
+  }, [isLoading]);
+  
+  useEffect(() => {
+    console.log("----------CorrectValues----------")
+    console.log(user.userTransactions)
+    console.log("------------")
+  },[user.userWallet])
+
+
+
+  const fetchUserData = useCallback(
+    async() => {
+      setIsLoading(true);
+      try {
+        await fetchAllBrands(); 
+        await fetchUser();
+      } catch (error) {
+        console.error("Error at fetchUserData: " + error);
+      }
+      setIsLoading(false);
+    },
+    [],
+  )
+  // Iterate allBrands.brands
+  // For allBrands.brands[i] look at tokens and see if token.mintPublicKey = mintPublicKey
+  // brands user.Transactions 
 
   const navigateToScreenHidingTabs = (screen) => {
     navigation.navigate(screen, {
@@ -152,7 +197,7 @@ export function Start({ navigation }) {
             }
             isSubsectionHeader={true}
           />
-          <HorizontalGiftCardTile balances={balances} />
+          <HorizontalGiftCardTile />
         </Section>
         <Section isHigherOpacity={false}>
           <StartActionButtons actionArray={actions} />

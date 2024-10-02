@@ -1,51 +1,59 @@
-
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, View, StyleSheet } from 'react-native';
 import { VerticalGiftCard, HorizontalGiftCard } from "@components/molecules/GiftCard";
-import { FlatList, View, StyleSheet } from 'react-native';
-
-export const HorizontalGiftCardTile = ({balances}) => {
-  return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      style={{ flexDirection: "row", marginTop:-15 }}
-    >
-      {balances.map((balanceInfo, index) => (
-        <HorizontalGiftCard
-          key={`${index}-${balanceInfo.token_id}`}
-          balance={balanceInfo.balance}
-          token_id={balanceInfo.token_id}
-          token_name={balanceInfo.token_name}
-        />
-      ))}
-    </ScrollView>
-  );
-};
-
-export const VerticalGiftCardTile = ({ balances, ...props }) => {
-  return (
-    <View style={styles.container}>
-      {balances.map((balance, index) => (
-        <View key={`${index}-${balance.token_id}`} style={styles.cardContainer}>
-          <VerticalGiftCard
-            balance={balance.balance}
-            token_id={balance.token_id}
-            token_name={balance.token_name}
-          />
-        </View>
-      ))}
-    </View>
-  );
-};
+import { useAppSelector } from "@hooks/store";
 
 const styles = StyleSheet.create({
-  container: {
+  horizontalScroll: {
+    flexDirection: "row", 
+    marginTop: -15
+  },
+  verticalContainer: {
     height: '100%',
-    flexDirection: 'row', // Change to 'row' to allow items to line up side by side
-    flexWrap: 'wrap', // Allow wrapping to next line
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   cardContainer: {
-    width: '50%', // Set width to 50% to ensure two columns
-    padding: 10, // Adjust padding as needed
-  },
+    width: '50%',
+    padding: 10,
+  }
 });
+
+const GiftCardTile = ({ isHorizontal = false }) => {
+  const userWallet = useAppSelector(state => state.user.userWallet);
+
+  if (isHorizontal) {
+    return (
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.horizontalScroll}
+      >
+        {userWallet?.map((transaction, index) => (
+          <HorizontalGiftCard
+            key={`${index}-${transaction.brandName}`}
+            balance={transaction.tokenBalance}
+            token_id={transaction.brandName}
+            token_name={transaction.brandName}
+          />
+        ))}
+      </ScrollView>
+    );
+  } else {
+    return (
+      <View style={styles.verticalContainer}>
+        {userWallet?.map((transaction, index) => (
+          <View key={`${index}-${transaction.brandName}`} style={styles.cardContainer}>
+            <VerticalGiftCard
+              balance={transaction.tokenBalance}
+              token_id={transaction.brandName}
+              token_name={transaction.brandName}
+            />
+          </View>
+        ))}
+      </View>
+    );
+  }
+};
+
+export const HorizontalGiftCardTile = () => <GiftCardTile isHorizontal />;
+export const VerticalGiftCardTile = () => <GiftCardTile />;

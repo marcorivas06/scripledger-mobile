@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { IUserPublic } from '@types/types';
+import { IUserPublic, IUserTransaction, IUserWallet } from '@types/types';
 
 const initialState:IUserPublic = {
   id:null,
@@ -12,6 +12,7 @@ const initialState:IUserPublic = {
   actionType:null,
   category:null,
   note:null,
+  userWallet: null,
   userTransactions: null,
 }
 
@@ -51,12 +52,22 @@ export const userSlice = createSlice({
       if (payload.note) {
         state.note = payload.note;
       }
+      if (payload.userWallet) {
+        state.userWallet = payload.userWallet;
+      }
       if (payload.userTransactions) {
         state.userTransactions = payload.userTransactions;
       }
     },
+    updateUserWallet: (state, action: PayloadAction<IUserWallet[]>) => {
+      state.userWallet = action.payload;
+    },
+    updateUserTransactions: (state, action: PayloadAction<IUserTransaction[]>) => {
+      state.userTransactions = action.payload;
+    },
+
   }
 })
 
-export const { updateUser } = userSlice.actions
+export const { updateUser, updateUserWallet, updateUserTransactions } = userSlice.actions
 export default userSlice.reducer;

@@ -3,7 +3,7 @@ import { PublicKey, clusterApiUrl, Connection, Keypair } from '@solana/web3.js';
 // import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import * as splToken from '@solana/spl-token';
 import { decode } from "bs58";
-import { IUserTransaction } from '@types/types';
+import { IUserWallet } from '@types/types';
 
 export const createConnection = async() => {
   return new Connection(clusterApiUrl("devnet"), "confirmed");
@@ -33,7 +33,7 @@ async function getTokenAccountsByOwner(connection, publicKey ) {
   }
 }
 
-export async function getAllTokenBalances(connectionInfo):Promise<IUserTransaction[]> {
+export async function getAllTokenBalances(connectionInfo):Promise<IUserWallet[]> {
   try {
     const { connection, publicKey} = connectionInfo;
     const publicKeyParsed = new PublicKey(publicKey);
@@ -41,11 +41,11 @@ export async function getAllTokenBalances(connectionInfo):Promise<IUserTransacti
 
     const balances = tokenAccounts.map((tokenAccountInfo) => {
       const accountData = tokenAccountInfo.account.data.parsed.info;
-
+  
       const mintAddress = accountData.mint;
       const tokenBalance = accountData.tokenAmount.uiAmount; // Adjust decimals if necessary
 
-      const transaction: IUserTransaction = {mintAddress: mintAddress, tokenBalance: tokenBalance}
+      const transaction: IUserWallet = {mintAddress: mintAddress, tokenBalance: tokenBalance}
       
       return transaction;
     });
@@ -55,4 +55,11 @@ export async function getAllTokenBalances(connectionInfo):Promise<IUserTransacti
   } catch (error) {
     console.error("Error: " + error);  
   }  
+}
+
+export async function getuserWallet(user):Promise<IUserWallet[]>{
+  const connection = await createConnection();
+  const connectionInfo = {connection: connection, publicKey: user.accountPublicKey};
+  const transactions:IUserWallet[] = await getAllTokenBalances(connectionInfo);
+  return transactions;
 }

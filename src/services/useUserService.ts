@@ -1,9 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useState } from 'react';
-import { updateUser } from '@store/user';
+import { updateUser, updateUserTransactions } from '@store/user';
+import { updateBrands } from '@store/brands';
 import { getOrCreateUserSecureCredentials } from '@utils/secureStore';
-import { IUserPublic, IUserTransaction } from '@types/types';
-import { createConnection, getAllTokenBalances } from '@utils/solanaUtils';
+import { IUserPublic, IUserWallet } from '@types/types';
+import { getuserWallet } from '@utils/solanaUtils';
 import { useAppDispatch } from '@hooks/store';
 
 export const useUserService = () => {
@@ -13,32 +14,54 @@ export const useUserService = () => {
 
   const fetchUser = useCallback(async () => {
     setIsLoading(true);
-    
-    const { username } = await getOrCreateUserSecureCredentials();
-    
     try {
-      const response = await fetch(`https://scripledger.azurewebsites.net/accounts/username/${username}`);
-      if (!response.ok) {
+      const { username } = await getOrCreateUserSecureCredentials();
+      
+      const accountResponse = await fetch(`https://scripledger.azurewebsites.net/accounts/username/${username}`);
+      if (!accountResponse.ok) {
         throw new Error('Failed to fetch user data');
       }
-      const user: IUserPublic = await response.json();    
-      const connection = await createConnection();
-      const connectionInfo = {connection: connection, publicKey: user.accountPublicKey};
-      const transactions:IUserTransaction[] = await getAllTokenBalances(connectionInfo);
-      user.userTransactions = transactions;
+      const user: IUserPublic = await accountResponse.json();    
+      user.userWallet = await getuserWallet(user);
+      
+      const transactionsResponse = await fetch(`https://scripledger.azurewebsites.net/transaction/user/${user.accountPublicKey}`);
+      if (!transactionsResponse.ok) {
+        throw new Error('Failed to fetch user Transactions');
+      }
+      const transactionData = await transactionsResponse.json();
+
+      user.userTransactions = transactionData;
 
       dispatch(updateUser(user)); 
     } 
     catch (error) {
       console.error("Error when fetching the user: " + error);
-    } 
-    finally {
-      setIsLoading(false);  // Always stop loading, whether success or failure
     }
+    setIsLoading(false); 
   }, [dispatch]);
+  
+  const fetchAllBrands = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`https://scripledger.azurewebsites.net/brands/`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+      const brands = await response.json();
+      dispatch(updateBrands(brands)); 
+    } 
+    catch (error) {
+      console.error("Error when fetching the user: " + error);
+    } 
+    setIsLoading(false);
+  }, [dispatch]);
+  
   
   return {
     fetchUser,
+    fetchAllBrands,
+    isLoading
   }
 
   //fetchUser 
@@ -51,5 +74,4 @@ export const useUserService = () => {
     //Look into secure storage,
       //  if username, look up username
       //  go back to login sign up  
-
 }

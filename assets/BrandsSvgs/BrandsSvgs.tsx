@@ -7,6 +7,9 @@ import {
   siApplemusic as AppleMusic,
   siAirbnb as Airbnb,
   siAmazon as Amazon,
+  siStarbucks as Starbucks,
+  siTarget as Target,
+
 } from "simple-icons";
 import Svg, { Path } from 'react-native-svg';
 
@@ -18,6 +21,8 @@ const BRAND_ICONS = {
   "4": {title:"Apple Music", svg: AppleMusic},
   "5": {title:"Airbnb", svg: Airbnb},
   "6": {title:"Amazon", svg: Amazon},
+  "Starbucks": {title:"Starbucks", svg: Starbucks},
+  "Target": {title:"Target", svg: Target},
 };
 
 export function GetBrandsTitleForId(id):string{  
@@ -29,7 +34,7 @@ export function GetBrandsTitleForId(id):string{
 }
 
 export const SvgComponent = ({ id, ...props }) => {
-  const icon = BRAND_ICONS[id].svg;
+  const icon = BRAND_ICONS[id]?.svg;
   if (!icon) return null;
   return (
     <Svg
