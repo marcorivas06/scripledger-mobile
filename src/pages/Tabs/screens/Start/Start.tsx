@@ -25,6 +25,7 @@ import { STACKS } from "@types/routes";
 import { useAppDispatch, useAppSelector } from "@hooks/store";
 import { useUserService } from "@services/useUserService";
 import { updateUser, updateUserWallet } from "@store/user";
+import { getPublicKeysFromTransaction } from "@utils/solanaUtils";
 // import { getAllTokenBalances } from "@utils/solanaUtils";
 //
 
@@ -35,59 +36,58 @@ export function Start({ navigation }) {
   const user = useAppSelector((state) => state.user);
   const allBrands = useAppSelector((state) => state.brands );
   // Mock Data for Balances
-  const [balances, setBalances] = useState<IBalance[]>([]);
-  const [transactions, setTransactions] = useState<ITransactions[]>([]);
-  const { fetchUser, fetchAllBrands } = useUserService();
+  // const [balances, setBalances] = useState<IBalance[]>([]);
+  
   const [isLoading, setIsLoading] = useState(false)
+  const { fetchUser, fetchAllBrands, fetchFromTransactionHash } = useUserService();
+  
+  // Need transactions to be in format 
+    // transaction.token_id
+    // transaction.type 
+    // transaction.balance
+    // transaction.date
 
   // ----
   useEffect(() => {
-    const { balances } = jsonForAccountData;
+    // const { balances } = jsonForAccountData;
     const { transactions } = jsonForTransactions;
-    setBalances(balances);
-    setTransactions(transactions);
+    // setBalances(balances);
+    // setTransactions(transactions);
     fetchUserData();
-    
   }, []);
   
   useEffect(() => {
-    // Step 1: Build a Map from mintPublicKey to brandName
     if(!isLoading && user.userWallet){
-      const mintToBrandMap = new Map();
+      const updateUserWalletWithBrandInfo = () => {
+        const mintToBrandMap = new Map();
 
-      allBrands.brands.forEach(({ brandName, tokens }) => {
-        tokens.forEach((token) => {
-          mintToBrandMap.set(token['mintPublicKey'], brandName);
+        allBrands.brands.forEach(({ brandName, tokens }) => {
+          tokens.forEach((token) => {
+            mintToBrandMap.set(token['mintPublicKey'], brandName);
+          });
         });
-      });
 
-      // Step 2: Use the Map to get transaction info
-      const getAllTransactionInfo = user.userWallet
-        .map(({ mintAddress, tokenBalance }) => {
-          const brandName = mintToBrandMap.get(mintAddress);
-          if (brandName) {
-            return { brandName, mintAddress, tokenBalance };
-          }
-          // Optionally handle cases where mintAddress is not found
-          return null;
-        })
-        .filter((item) => item !== null); // Remove any null entries
+        // Step 2: Use the Map to get transaction info
+        const getAllTransactionInfo = user.userWallet
+          .map(({ mintAddress, tokenBalance }) => {
+            const brandName = mintToBrandMap.get(mintAddress);
+            if (brandName) {
+              return { brandName, mintAddress, tokenBalance };
+            }
+            // Optionally handle cases where mintAddress is not found
+            return null;
+          })
+          .filter((item) => item !== null); // Remove any null entries
 
-      dispatch(updateUserWallet(getAllTransactionInfo))
-      
-      console.log(user.userWallet)
-      
-    }    
+        // Setting userWallet State to include brandName
+        dispatch(updateUserWallet(getAllTransactionInfo));
+      };
+
+      updateUserWalletWithBrandInfo();
+    } 
+    
   }, [isLoading]);
   
-  useEffect(() => {
-    console.log("----------CorrectValues----------")
-    console.log(user.userTransactions)
-    console.log("------------")
-  },[user.userWallet])
-
-
-
   const fetchUserData = useCallback(
     async() => {
       setIsLoading(true);
@@ -101,6 +101,51 @@ export function Start({ navigation }) {
     },
     [],
   )
+
+  useEffect(() => {
+    
+    const filterTransactions = async () => {
+      
+      let arrayOfTransactionHash = [];
+      let arrayofPublicKeys = [];
+      
+      if (user.userTransactions) {
+        user.userTransactions.map(({transactionHash}) => {
+          arrayOfTransactionHash.push(transactionHash);
+        });
+        for (const transactionHash of arrayOfTransactionHash.slice(0,5)) {
+          try {
+            console.log('===========================================')
+            const transactionPublicKeys = await getPublicKeysFromTransaction(transactionHash);
+            arrayofPublicKeys.push(transactionPublicKeys);
+            
+          } catch (error) {
+            console.error(`Error processing transaction ${transactionHash}:`, error);
+          }
+          // Wait for 1 second before the next request
+          // await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+        
+        // const dataArrayForTransactions = await fetchFromTransactionHash(arrayofPublicKeys);
+        // console.log(dataArrayForTransactions)
+    }
+  }
+  
+  if(!isLoading && user.userTransactions){
+    filterTransactions();
+  } 
+
+  }, [user.userTransactions])
+
+
+  // const fetchFromTransactionHashUI = useCallback(async (publicKey) => {
+  //   try {
+  //     const brands = await fetchFromTransactionHash(publicKey);
+  //     return brands;
+  //   } catch (error) {
+  //     console.error("Error at fetchFromTransactionHash: " + error);
+  //   }
+  // }, []);
   // Iterate allBrands.brands
   // For allBrands.brands[i] look at tokens and see if token.mintPublicKey = mintPublicKey
   // brands user.Transactions 
@@ -117,7 +162,7 @@ export function Start({ navigation }) {
 
   const handleSeeAllBalances = (screen) => {
     navigation.navigate(screen, {
-      balances: balances,
+      balances: user.userWallet,
     });
   };
 
@@ -201,7 +246,7 @@ export function Start({ navigation }) {
         </Section>
         <Section isHigherOpacity={false}>
           <StartActionButtons actionArray={actions} />
-          <TransactionHistory transactions={transactions} />
+          {/* <TransactionHistory transactions={transactions} /> */}
         </Section>
       </ScrollView>
     </Page>

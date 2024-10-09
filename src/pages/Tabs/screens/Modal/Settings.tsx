@@ -10,11 +10,7 @@ import { ActionButton } from "@components/atoms/ActionButton";
 import { getOrCreateUserSecureCredentials } from "@utils/secureStore";
 
 export const Settings = ({navigation}) => {
-  
-  const handleSecureStorage = async() => {
-    const secureCredentials = getOrCreateUserSecureCredentials();
-  }
-  
+    
   return (
     <Page fullWidth>
       <ScrollView style={{ flex: 1 }} >
@@ -45,9 +41,6 @@ export const Settings = ({navigation}) => {
         <HStack justifyContent="space-between">
           <View marginTop={20} alignItems="flex-start">
             <ActionButton buttonName='Log Out' width={120} />
-          </View>
-          <View marginTop={20} alignItems="flex-start">
-            <ActionButton buttonName='Display SK' width={130} bg="#00F" onPress={handleSecureStorage} />
           </View>
         </HStack>
         </ScrollView>

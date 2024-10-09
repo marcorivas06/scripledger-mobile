@@ -41,7 +41,7 @@ export async function getAllTokenBalances(connectionInfo):Promise<IUserWallet[]>
 
     const balances = tokenAccounts.map((tokenAccountInfo) => {
       const accountData = tokenAccountInfo.account.data.parsed.info;
-  
+    
       const mintAddress = accountData.mint;
       const tokenBalance = accountData.tokenAmount.uiAmount; // Adjust decimals if necessary
 
@@ -62,4 +62,33 @@ export async function getuserWallet(user):Promise<IUserWallet[]>{
   const connectionInfo = {connection: connection, publicKey: user.accountPublicKey};
   const transactions:IUserWallet[] = await getAllTokenBalances(connectionInfo);
   return transactions;
+}
+
+export async function getPublicKeysFromTransaction(txHash) {
+  // Connect to the correct Solana cluster
+  const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+  try {
+    console.log(`Fetching transaction for hash: ${txHash}`);
+    // Fetch the transaction details
+    const transaction = await connection.getTransaction(txHash, { commitment: 'confirmed' });
+
+    if (transaction) {
+      // Extract the transaction message
+      const transactionMessage = transaction.transaction.message;
+      console.log("Let me see transaction Message")
+      console.log(transactionMessage)
+
+      // Map account keys to PublicKey objects
+      const accountKeys = transactionMessage.accountKeys.map(key => new PublicKey(key));
+      console.log("Let me see account Keys")
+      console.log(accountKeys)
+      return accountKeys;
+    } else {
+      console.log(`Transaction ${txHash} not found or does not exist.`);
+      return []; // Return an empty array if transaction not found
+    }
+  } catch (error) {
+    console.error(`Error fetching transaction ${txHash}:`, error);
+    return []; // Return an empty array in case of error
+  }
 }

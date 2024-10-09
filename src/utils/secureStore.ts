@@ -6,7 +6,6 @@ import { MOCK_USERNAME, USER_USERNAME, USER_SECRET } from '@constants/user.const
 
 export async function getOrCreateUserSecureCredentials() {
   const userCredentials = await getUserCredentials();
-  
   try {
     if ( userCredentials === undefined) {
       const newKeyPair = await generateRandomNewKeyPair();

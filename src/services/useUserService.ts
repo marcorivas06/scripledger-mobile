@@ -4,7 +4,7 @@ import { updateUser, updateUserTransactions } from '@store/user';
 import { updateBrands } from '@store/brands';
 import { getOrCreateUserSecureCredentials } from '@utils/secureStore';
 import { IUserPublic, IUserWallet } from '@types/types';
-import { getuserWallet } from '@utils/solanaUtils';
+import { getPublicKeysFromTransaction, getuserWallet } from '@utils/solanaUtils';
 import { useAppDispatch } from '@hooks/store';
 
 export const useUserService = () => {
@@ -57,10 +57,36 @@ export const useUserService = () => {
     setIsLoading(false);
   }, [dispatch]);
   
-  
+  const fetchFromTransactionHash = useCallback(async (accountKeys) => {
+    setIsLoading(true);
+    try {
+      const brands = [];
+      console.log(accountKeys)
+      // Log or return the public keys
+      // for (const accountKey of accountKeys) {
+      //   console.log("Fetching With Public Key")
+      //   console.log(accountKey)
+      //   const response = await fetch(`https://scripledger.azurewebsites.net/brands/publicKey/${accountKey}`);
+        
+      //   if (!response.ok) {
+      //     throw new Error('Failed to fetch brand data');
+      //   }
+
+      //   const brand = await response.json();     
+      //   brands.push(brand);
+      // }
+
+      return brands;
+    } catch (error) {
+      console.error("Error when fetching the brand: " + error);
+    }
+    setIsLoading(false);
+  }, [dispatch]);
+
   return {
     fetchUser,
     fetchAllBrands,
+    fetchFromTransactionHash,
     isLoading
   }
 
