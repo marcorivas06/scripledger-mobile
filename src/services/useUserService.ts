@@ -6,6 +6,7 @@ import { getOrCreateUserSecureCredentials } from '@utils/secureStore';
 import { IUserPublic, IUserWallet } from '@types/types';
 import { getPublicKeysFromTransaction, getuserWallet } from '@utils/solanaUtils';
 import { useAppDispatch } from '@hooks/store';
+import { sortTransactionsByDate } from '@utils/utils';
 
 export const useUserService = () => {
   const dispatch = useAppDispatch();
@@ -29,9 +30,8 @@ export const useUserService = () => {
         throw new Error('Failed to fetch user Transactions');
       }
       const transactionData = await transactionsResponse.json();
-
-      user.userTransactions = transactionData;
-
+      const formattedTransactions = sortTransactionsByDate(transactionData);
+      user.userTransactions = formattedTransactions;
       dispatch(updateUser(user)); 
     } 
     catch (error) {

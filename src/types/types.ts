@@ -40,10 +40,14 @@ export interface ITransaction{
   note: string;
   transactionLabel: string;
 }
+
+// For Start Screen
 export interface IBalance{
-  token_id: string;
-  token_name: string;
-  balance: number;
+  balanceChange: number;
+  brandName: string;
+  mintPublicKey: string;
+  readableTimestamp: string;
+  transactionType: string;
 }
 
 export interface IStartActionButton{
@@ -70,6 +74,7 @@ export interface IUserTransaction{
   id: string;
   publicKey: string;
   timestamp: Date;
+  readableTimestamp: string;
   transactionHash: string;
   transactionType: string; 
 }

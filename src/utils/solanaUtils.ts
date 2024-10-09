@@ -68,21 +68,149 @@ export async function getPublicKeysFromTransaction(txHash) {
   // Connect to the correct Solana cluster
   const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
   try {
-    console.log(`Fetching transaction for hash: ${txHash}`);
     // Fetch the transaction details
     const transaction = await connection.getTransaction(txHash, { commitment: 'confirmed' });
 
     if (transaction) {
       // Extract the transaction message
       const transactionMessage = transaction.transaction.message;
-      console.log("Let me see transaction Message")
-      console.log(transactionMessage)
+      
+      console.log("===========Let me see transaction Message===========")
+      console.log("Post Balance: ", transaction.meta.postBalances)
+      console.log("Pre Balance: ", transaction.meta.preBalances)
 
       // Map account keys to PublicKey objects
       const accountKeys = transactionMessage.accountKeys.map(key => new PublicKey(key));
-      console.log("Let me see account Keys")
-      console.log(accountKeys)
+      // console.log("Let me see account Keys")
+      // console.log(accountKeys)
       return accountKeys;
+    } else {
+      console.log(`Transaction ${txHash} not found or does not exist.`);
+      return []; // Return an empty array if transaction not found
+    }
+  } catch (error) {
+    console.error(`Error fetching transaction ${txHash}:`, error);
+    return []; // Return an empty array in case of error
+  }
+}
+
+export async function getMintPublicKeyFromTransaction(txHash) {
+  // Connect to the correct Solana cluster
+  const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+
+  try {
+    // Fetch the parsed transaction details
+    const transaction = await connection.getParsedTransaction(txHash, 'confirmed');
+
+    if (transaction) {
+      // Initialize a set to store unique mint public keys
+      const mintPublicKeys = new Set();
+
+      // Loop through the transaction instructions
+      const instructions = transaction.transaction.message.instructions;
+
+      for (const instruction of instructions) {
+        // Check if the instruction is parsed and involves the Token Program
+        if (instruction.program === 'spl-token' && instruction.parsed) {
+          const parsedInfo = instruction.parsed.info;
+
+          // Depending on the instruction type, extract the mint address
+          if (parsedInfo && parsedInfo.mint) {
+            mintPublicKeys.add(parsedInfo.mint);
+          } else if (parsedInfo && parsedInfo.tokenAmount && parsedInfo.tokenAmount.mint) {
+            mintPublicKeys.add(parsedInfo.tokenAmount.mint);
+          } else if (parsedInfo && parsedInfo.account) {
+            // Fetch the account info to get the mint
+            const accountInfo = await connection.getParsedAccountInfo(parsedInfo.account);
+            if (accountInfo && accountInfo.value && accountInfo.value.data) {
+              const accountData = accountInfo.value.data.parsed.info;
+              if (accountData.mint) {
+                mintPublicKeys.add(accountData.mint);
+              }
+            }
+          }
+        }
+      }
+
+      // Convert the set to an array and return
+      const mintPublicKeysArray = Array.from(mintPublicKeys);
+      // console.log('Mint Public Keys involved in the transaction:', mintPublicKeysArray);
+      return mintPublicKeysArray;
+    } else {
+      console.log(`Transaction ${txHash} not found or does not exist.`);
+      return []; // Return an empty array if transaction not found
+    }
+  } catch (error) {
+    console.error(`Error fetching transaction ${txHash}:`, error);
+    return []; // Return an empty array in case of error
+  }
+}
+
+export async function getMintPublicKeyAndTransactionTypeFromTransaction(txHash) {
+  // Connect to the correct Solana cluster
+  const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+
+  try {
+    // Fetch the parsed transaction details
+    const transaction = await connection.getParsedTransaction(txHash, 'confirmed');
+
+    if (transaction) {
+      // Initialize an array to store results
+      const mintPublicKeysWithType = [];
+
+      // Get account keys involved in the transaction
+      const accountKeys = transaction.transaction.message.accountKeys.map(keyObj => keyObj.pubkey.toString());
+
+      // Get pre and post token balances
+      const preTokenBalances = transaction.meta.preTokenBalances || [];
+      const postTokenBalances = transaction.meta.postTokenBalances || [];
+
+      // Map balances by account index for easy lookup
+      const preBalancesMap = {};
+      preTokenBalances.forEach(balance => {
+        preBalancesMap[balance.accountIndex] = balance;
+      });
+
+      const postBalancesMap = {};
+      postTokenBalances.forEach(balance => {
+        postBalancesMap[balance.accountIndex] = balance;
+      });
+
+      // Set of all token accounts involved
+      const tokenAccountsInvolved = new Set([
+        ...preTokenBalances.map(balance => balance.accountIndex),
+        ...postTokenBalances.map(balance => balance.accountIndex),
+      ]);
+
+      for (const accountIndex of tokenAccountsInvolved) {
+        const accountPubkey = accountKeys[accountIndex];
+        const preBalanceInfo = preBalancesMap[accountIndex];
+        const postBalanceInfo = postBalancesMap[accountIndex];
+
+        const mintPublicKey = (preBalanceInfo || postBalanceInfo).mint;
+        const preBalance = preBalanceInfo ? parseFloat(preBalanceInfo.uiTokenAmount.uiAmountString) : 0;
+        const postBalance = postBalanceInfo ? parseFloat(postBalanceInfo.uiTokenAmount.uiAmountString) : 0;
+
+        const balanceChange = postBalance - preBalance;
+
+        let transactionType = '';
+        if (balanceChange < 0) {
+          transactionType = 'Sent';
+        } else if (balanceChange > 0) {
+          transactionType = 'Received';
+        } else {
+          transactionType = 'Unchanged';
+        }
+
+        mintPublicKeysWithType.push({
+          mintPublicKey,
+          transactionType,
+          balanceChange
+        });
+        
+      }
+
+      return mintPublicKeysWithType;
     } else {
       console.log(`Transaction ${txHash} not found or does not exist.`);
       return []; // Return an empty array if transaction not found

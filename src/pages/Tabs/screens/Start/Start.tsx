@@ -9,7 +9,7 @@ import {
   Section,
 } from "@components/molecules/Page";
 import { Button, HStack, Text, View, VStack } from "@gluestack-ui/themed";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { IBalance, IStartActionButton, ITransaction } from "@types/types";
 import { StartActionButtons } from "@components/molecules/StartActionButtons";
@@ -25,7 +25,7 @@ import { STACKS } from "@types/routes";
 import { useAppDispatch, useAppSelector } from "@hooks/store";
 import { useUserService } from "@services/useUserService";
 import { updateUser, updateUserWallet } from "@store/user";
-import { getPublicKeysFromTransaction } from "@utils/solanaUtils";
+import { getPublicKeysFromTransaction, getMintPublicKeyFromTransaction, getMintPublicKeyAndTransactionTypeFromTransaction } from "@utils/solanaUtils";
 // import { getAllTokenBalances } from "@utils/solanaUtils";
 //
 
@@ -37,6 +37,7 @@ export function Start({ navigation }) {
   const allBrands = useAppSelector((state) => state.brands );
   // Mock Data for Balances
   // const [balances, setBalances] = useState<IBalance[]>([]);
+  const [curatedTransactions, setCuratedTransactions] = useState<IBalance[]>([]);
   
   const [isLoading, setIsLoading] = useState(false)
   const { fetchUser, fetchAllBrands, fetchFromTransactionHash } = useUserService();
@@ -50,23 +51,25 @@ export function Start({ navigation }) {
   // ----
   useEffect(() => {
     // const { balances } = jsonForAccountData;
-    const { transactions } = jsonForTransactions;
     // setBalances(balances);
     // setTransactions(transactions);
     fetchUserData();
   }, []);
   
+  const mintToBrandMap = useMemo(() => {
+    const mintToBrandMap = new Map();
+
+    allBrands.brands.forEach(({ brandName, tokens }) => {
+      tokens.forEach((token) => {
+        mintToBrandMap.set(token['mintPublicKey'], brandName);
+      });
+    });
+    return mintToBrandMap;
+  }, [allBrands.brands])
+  
   useEffect(() => {
     if(!isLoading && user.userWallet){
       const updateUserWalletWithBrandInfo = () => {
-        const mintToBrandMap = new Map();
-
-        allBrands.brands.forEach(({ brandName, tokens }) => {
-          tokens.forEach((token) => {
-            mintToBrandMap.set(token['mintPublicKey'], brandName);
-          });
-        });
-
         // Step 2: Use the Map to get transaction info
         const getAllTransactionInfo = user.userWallet
           .map(({ mintAddress, tokenBalance }) => {
@@ -102,53 +105,75 @@ export function Start({ navigation }) {
     [],
   )
 
-  useEffect(() => {
+  // useEffect(() => {
     
+  //   const filterTransactions = async () => {
+      
+  //     let arrayOfTransactionHash = [];
+  //     let arrayOfMintPublicKeys = [];
+      
+  //     if (user.userTransactions) {
+  //       // Sorting transactions by date
+  //       // Sort transactions by date
+        
+  //       user.userTransactions.map(({transactionHash}) => {
+  //         arrayOfTransactionHash.push(transactionHash);
+  //       });
+  //       for (const transactionHash of arrayOfTransactionHash) {
+  //         try {
+  //           const transactionPublicKeys = await getMintPublicKeyFromTransaction(transactionHash);
+  //           arrayOfMintPublicKeys.push(transactionPublicKeys);
+  //         } catch (error) {
+  //           console.error(`Error processing transaction ${transactionHash}:`, error);
+  //         }
+          
+  //       }
+  //   }
+  // }
+  
+  // if(!isLoading && user.userTransactions){
+  //   filterTransactions();
+  // } 
+
+  // }, [user.userTransactions])
+
+  useEffect(() => {
     const filterTransactions = async () => {
-      
-      let arrayOfTransactionHash = [];
-      let arrayofPublicKeys = [];
-      
       if (user.userTransactions) {
-        user.userTransactions.map(({transactionHash}) => {
-          arrayOfTransactionHash.push(transactionHash);
-        });
-        for (const transactionHash of arrayOfTransactionHash.slice(0,5)) {
+        console.log(Object.keys(user.userTransactions[0]))
+        const arrayOfTransactionHash = user.userTransactions.map(({ transactionHash, readableTimestamp }) => {return {transactionHash, readableTimestamp}});
+  
+        const transactionsWithBrandNames = [];
+  
+        for (const { transactionHash, readableTimestamp} of arrayOfTransactionHash.slice(0,5)) {
           try {
-            console.log('===========================================')
-            const transactionPublicKeys = await getPublicKeysFromTransaction(transactionHash);
-            arrayofPublicKeys.push(transactionPublicKeys);
-            
+            const mintPublicKeysInfo = await getMintPublicKeyAndTransactionTypeFromTransaction(transactionHash);
+  
+            const brandsInTransaction = mintPublicKeysInfo.map(({mintPublicKey, transactionType, balanceChange}) => {
+              const token_id = mintToBrandMap.get(mintPublicKey) || 'Unknown';
+              return { token_id, transactionType, readableTimestamp, mintPublicKey, balanceChange };
+            });
+  
+            transactionsWithBrandNames.push({
+              brandsInTransaction: brandsInTransaction[0],
+            });
           } catch (error) {
             console.error(`Error processing transaction ${transactionHash}:`, error);
           }
-          // Wait for 1 second before the next request
-          // await new Promise(resolve => setTimeout(resolve, 1000));
         }
-        
-        // const dataArrayForTransactions = await fetchFromTransactionHash(arrayofPublicKeys);
-        // console.log(dataArrayForTransactions)
-    }
-  }
   
-  if(!isLoading && user.userTransactions){
-    filterTransactions();
-  } 
+        // Dispatch an action or set state to store transactionsWithBrandNames
+        setCuratedTransactions(transactionsWithBrandNames);
+        // console.log(transactionsWithBrandNames[0].brandsInTransaction[0].readableTimestamp)
+        // dispatch(updateUserTransactionsWithBrandNames(transactionsWithBrandNames));
+      }
+    };
+  
+    if (!isLoading && user.userTransactions) {
+      filterTransactions();
+    }
+  }, [user.userTransactions, isLoading, mintToBrandMap]);
 
-  }, [user.userTransactions])
-
-
-  // const fetchFromTransactionHashUI = useCallback(async (publicKey) => {
-  //   try {
-  //     const brands = await fetchFromTransactionHash(publicKey);
-  //     return brands;
-  //   } catch (error) {
-  //     console.error("Error at fetchFromTransactionHash: " + error);
-  //   }
-  // }, []);
-  // Iterate allBrands.brands
-  // For allBrands.brands[i] look at tokens and see if token.mintPublicKey = mintPublicKey
-  // brands user.Transactions 
 
   const navigateToScreenHidingTabs = (screen) => {
     navigation.navigate(screen, {
@@ -176,8 +201,8 @@ export function Start({ navigation }) {
     {
       name: "Add",
       iconName: "line-scan", // Replace with the actual icon name or SVG path
-      iconAs: "MaterialCommunityIcons", // Replace with the actual icon name or SVG path
-      gradientColor: ["#2A864F", "#1BCE63"],
+      iconAs: "MaterialCommunityIcons", // Replace with the actual icon library
+      gradientColor: ["#434343", "#1C1C1C"], // Dark gray to black gradient
       action: () => {
         navigateToScreenHidingTabs(SCREENS.START_STACK.ADD);
       },
@@ -185,32 +210,33 @@ export function Start({ navigation }) {
     {
       name: "Pay",
       iconName: "wallet", // Replace with the actual icon name or SVG path
-      iconAs: "AntDesign", // Replace with the actual icon name or SVG path
-      gradientColor: ["#F45B89", "#FD8FB0"],
+      iconAs: "AntDesign", // Replace with the actual icon library
+      gradientColor: ["#434343", "#1C1C1C"], // Dark gray to black gradient
       action: () => navigateToScreen(SCREENS.START_STACK.PAY),
     },
     {
       name: "Send",
       iconName: "email-send", // Replace with the actual icon name or SVG path
-      iconAs: "MaterialCommunityIcons", // Replace with the actual icon name or SVG path
-      gradientColor: ["#B14FFF", "#CA8FF8"],
+      iconAs: "MaterialCommunityIcons", // Replace with the actual icon library
+      gradientColor: ["#434343", "#1C1C1C"], // Dark gray to black gradient
       action: () => handleSeeAllBalances(SCREENS.START_STACK.SEND),
     },
     {
       name: "Receive",
       iconName: "hand-holding-dollar", // Replace with the actual icon name or SVG path
-      iconAs: "FontAwesome6", // Replace with the actual icon name or SVG path
-      gradientColor: ["#6DC0FC", "#258CD6"],
+      iconAs: "FontAwesome6", // Replace with the actual icon library
+      gradientColor: ["#434343", "#1C1C1C"], // Dark gray to black gradient
       action: () => navigateToScreen(SCREENS.START_STACK.RECEIVE),
     },
   ];
+
 
   return (
     <Page fullWidth>
       <ScrollView style={{ flex: 1 }}>
         <MyHeader
           title="Welcome"
-          userName={user.username}
+          userName={user.username ? user.username.charAt(0).toUpperCase() + user.username.slice(1) : ''}
           isHomePage={true}
           rightHeaderComponent={
             <CircularButton
@@ -232,12 +258,9 @@ export function Start({ navigation }) {
                 }
                 style={styles.goBackButton}
               >
-                <HStack alignItems="center">
-                  <TabIcon as="MaterialCommunityIcons" name="eye" size="xs" />
                   <Text marginHorizontal={5} style={styles.goBackText}>
                     See All
                   </Text>
-                </HStack>
               </TouchableOpacity>
             }
             isSubsectionHeader={true}
@@ -246,7 +269,7 @@ export function Start({ navigation }) {
         </Section>
         <Section isHigherOpacity={false}>
           <StartActionButtons actionArray={actions} />
-          {/* <TransactionHistory transactions={transactions} /> */}
+          <TransactionHistory transactions={curatedTransactions} />
         </Section>
       </ScrollView>
     </Page>
@@ -256,11 +279,11 @@ export function Start({ navigation }) {
 const styles = StyleSheet.create({
   goBackButton: {
     backgroundColor: "#FFF1FF", // Change this to your desired background color
-    padding: 10,
+    padding: 8,
     borderRadius: 15,
     alignItems: "center",
     margin: 10,
-    width: "30%",
+    
   },
   goBackText: {
     fontFamily: "DarkerGrotesque-Medium",

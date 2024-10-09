@@ -8,9 +8,10 @@ import { HStack } from "@gluestack-ui/themed";
 import { TabIcon } from "@components/atoms/TabIcon";
 import { ActionButton } from "@components/atoms/ActionButton";
 import { getOrCreateUserSecureCredentials } from "@utils/secureStore";
+import { useAppSelector } from "@hooks/store";
 
 export const Settings = ({navigation}) => {
-    
+  const user = useAppSelector(state => state.user);
   return (
     <Page fullWidth>
       <ScrollView style={{ flex: 1 }} >
@@ -28,7 +29,7 @@ export const Settings = ({navigation}) => {
           <TouchableOpacity>
             <HStack justifyContent="space-between"> 
               <Text>
-                Marcos Rivas
+                {user.username ? user.username.charAt(0).toUpperCase() + user.username.slice(1) : ''}
               </Text>
               <TabIcon as="Entypo" name="chevron-right"/>
             </HStack>
