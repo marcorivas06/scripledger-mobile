@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     borderRadius:10
   },
   overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Semi-transparent overlay
+    backgroundColor: 'transparent', // Semi-transparent overlay
     alignItems: 'center',
     justifyContent: 'center',
   },

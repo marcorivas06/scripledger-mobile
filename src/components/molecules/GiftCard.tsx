@@ -2,11 +2,6 @@ import { StyleSheet, View, Text } from 'react-native';
 import { SvgComponent } from "@assets/BrandsSvgs/BrandsSvgs";
 import { Box, VStack, HStack } from "@gluestack-ui/themed";
 import { TouchableOpacity, ScrollView } from "react-native-gesture-handler";
-import AppLoading from 'expo-app-loading';
-import { useEffect } from 'react';
-import { useFonts } from 'expo-font';
-
-
 
 export const HorizontalGiftCard = ({ balance, token_id, token_name }) => {
   return (

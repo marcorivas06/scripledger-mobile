@@ -7,8 +7,9 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 export const TransactionHistory = ({transactions}) => {
   const types = {
-    Sent: { color: 'red', sign: '-' },
-    Receive: { color: 'green', sign: '+' }
+    Sent: { color: 'red', sign: '$' },
+    Received: { color: 'green', sign: '$+' },
+    Unchanged: { color: 'grey', sign: '---' }
   };
 
   return(
@@ -20,8 +21,8 @@ export const TransactionHistory = ({transactions}) => {
               {
                 <TouchableOpacity>
                 <HStack style={{alignItems:'center', justifyContent:'center' }} >
-                  <Text fontFamily="DarkerGrotesque-SemiBold" fontSize={18} color="#A5A2A1">Sort by</Text>
-                  <TabIcon marginTop={5} as="Entypo" name="triangle-down" size="xs" color="#A5A2A1" /> 
+                  {/* <Text fontFamily="DarkerGrotesque-SemiBold" fontSize={18} color="#A5A2A1">Sort by</Text>
+                  <TabIcon marginTop={5} as="Entypo" name="triangle-down" size="xs" color="#A5A2A1" />  */}
                 </HStack>
               </TouchableOpacity>
 
@@ -32,24 +33,30 @@ export const TransactionHistory = ({transactions}) => {
         <Box style={styles.cardContainer}>
           <VStack alignItems='flex-start' marginHorizontal={15} >
           {
-            transactions.map((transaction, index) => {
-              const name = GetBrandsTitleForId(transaction.token_id);
-              const { color, sign } = types[transaction.type] || { color: 'black', sign: '' };
+            transactions?.map(({brandsInTransaction}, index) => {              
+              // console.log(brandsInTransaction.readableTimestamp)
+              const name = GetBrandsTitleForId(brandsInTransaction.token_id);
+              const { color, sign } = types[brandsInTransaction.transactionType] || { color: 'black', sign: '' };
               
               return(
-              <HStack  key={`${transaction.token_id}-${index}`} style={styles.transaction} >
+              <HStack  key={`${brandsInTransaction.token_id}-${index}`} style={styles.transaction} >
                   <HStack justifyContent="space-between"  alignItems="center">
-                    <SvgComponent id={transaction.token_id} style={styles.svgIcon} />
-                    <Text width={180}  style={[styles.tokenName, { fontFamily: 'DarkerGrotesque-Medium' }]}>
-                      {transaction.type} {name}
-                    </Text>
+                    <SvgComponent id={brandsInTransaction.token_id} style={styles.svgIcon} />
+                    <VStack alignItems="flex-start" >
+                      <Text width={180} style={[styles.tokenName, { fontFamily: 'DarkerGrotesque-Medium' }]}>
+                        {name}
+                      </Text>
+                      <Text width={120} style={styles.transactionType}>
+                        {brandsInTransaction.transactionType}
+                      </Text>
+                    </VStack>
                   </HStack>
                 
                   <VStack >
                     <Text style={[styles.balance, { color: color }]}>
-                      {sign}{parseFloat(transaction.balance).toFixed(2)}
+                      {sign}{parseFloat(brandsInTransaction.balanceChange).toFixed(4)}
                     </Text>
-                    <Text style={styles.date}>{transaction.date}</Text>
+                    <Text style={styles.date}>{brandsInTransaction.readableTimestamp}</Text>
                 </VStack>   
             </HStack>
               )
@@ -85,7 +92,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'DarkerGrotesque-Black',
     color: '#51382F',
-    padding: 5,
+    paddingHorizontal: 5,
   },
   balance: {
     fontSize: 18,
@@ -96,5 +103,11 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: 'bold',
     fontFamily: 'DarkerGrotesque-Medium',
+  },
+  transactionType: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    fontFamily: 'DarkerGrotesque-Medium',
+    paddingHorizontal: 5,
   }
 });

@@ -7,14 +7,11 @@ import { TouchableOpacity } from "react-native";
 import { HStack } from "@gluestack-ui/themed";
 import { TabIcon } from "@components/atoms/TabIcon";
 import { ActionButton } from "@components/atoms/ActionButton";
-import { getOrCreateUserSecretKey } from "@utils/secureStore";
+import { getOrCreateUserSecureCredentials } from "@utils/secureStore";
+import { useAppSelector } from "@hooks/store";
 
 export const Settings = ({navigation}) => {
-  
-  const handleSecureStorage = async() => {
-    getOrCreateUserSecretKey();
-  }
-  
+  const user = useAppSelector(state => state.user);
   return (
     <Page fullWidth>
       <ScrollView style={{ flex: 1 }} >
@@ -32,7 +29,7 @@ export const Settings = ({navigation}) => {
           <TouchableOpacity>
             <HStack justifyContent="space-between"> 
               <Text>
-                Marcos Rivas
+                {user.username ? user.username.charAt(0).toUpperCase() + user.username.slice(1) : ''}
               </Text>
               <TabIcon as="Entypo" name="chevron-right"/>
             </HStack>
@@ -45,9 +42,6 @@ export const Settings = ({navigation}) => {
         <HStack justifyContent="space-between">
           <View marginTop={20} alignItems="flex-start">
             <ActionButton buttonName='Log Out' width={120} />
-          </View>
-          <View marginTop={20} alignItems="flex-start">
-            <ActionButton buttonName='Display SK' width={130} bg="#00F" onPress={handleSecureStorage} />
           </View>
         </HStack>
         </ScrollView>
